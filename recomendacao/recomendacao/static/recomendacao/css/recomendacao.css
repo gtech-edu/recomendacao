@@ -1,0 +1,11 @@
+#form-search-box {
+    display: flex;
+}
+
+    #form-texto {
+        flex: 1;
+    }
+    
+    #custom-search {
+        flex: 1;
+    }

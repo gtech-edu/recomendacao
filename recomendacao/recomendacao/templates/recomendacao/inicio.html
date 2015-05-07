@@ -1,0 +1,99 @@
+{% extends "mechg/base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+
+<style type="text/css">
+    .text {
+        margin-bottom: 10px;
+    }
+    
+    #info_mechgcomp .text {
+        text-align: justify;
+    }
+    
+    #div_informacoes {
+        display: flex;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+        #info_mechgcomp {
+            display: flex;
+            flex: 2;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #info_gcomp {
+            flex: 1.5;
+        }
+        
+        #info_publicacoes {
+            display: flex;
+            flex: 2;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+    
+    #div_inpi {
+        text-align: center;
+    }
+</style>
+
+<!-- Jumbotron -->
+<div class="jumbotron">
+    <object width="560" height="250">
+        <param name="movie" value="https://www.youtube.com/v/GvffScP8OP8?version=3&amp;hl=pt_BR&amp;rel=0"></param>
+        <param name="allowFullScreen" value="true"></param>
+        <param name="allowscriptaccess" value="always"></param>
+        <embed src="https://www.youtube.com/v/GvffScP8OP8?version=3&amp;hl=pt_BR&amp;rel=0" type="application/x-shockwave-flash" width="560" height="250" allowscriptaccess="null" allowfullscreen="true"></embed>
+    </object>
+</div>
+
+<!-- Vídeo novo 
+<div class="jumbotron">
+    <object width="560" height="315">
+        <param name="movie" value="https://www.youtube.com/v/jojfx_1IDqQ?version=3&amp;hl=pt_BR&amp;rel=0"></param>
+        <param name="allowFullScreen" value="true"></param>
+        <param name="allowscriptaccess" value="always"></param>
+        <embed src="https://www.youtube.com/v/jojfx_1IDqQ?version=3&amp;hl=pt_BR&amp;rel=0" type="application/x-shockwave-flash" width="560" height="315" allowscriptaccess="null" allowfullscreen="true"></embed>
+    </object>
+</div>
+-->
+
+<hr></hr>
+
+    <div id='div_informacoes'>
+        <div id="info_mechgcomp">
+            <h3>MECH-Gcomp</h3>
+            <div class='text'>O software MECH-Gcomp, desenvolvido pelo Grupo de Materiais Compósitos e Nanocompósitos (GCOMP) do LAPOL/UFRGS, visa proporcionar uma alternativa fácil, rápida e didática para o cálculo das propriedades mecânicas, térmicas e higroscópicas de materiais compósitos.</div>
+            <a class="btn btn-primary" href='{% url "sobre" %}'>Detalhes »</a>
+        </div>
+        
+        <div id="info_gcomp">
+            <h3>Grupo de pesquisa</h3>
+            <a href='http://www.ufrgs.br/lapol/gcomp/index.html' target='new'><img src='{% static "mechg/images/logo_gcomp.gif" %}'></a>
+        </div>
+        
+       <div id="info_publicacoes">
+            <h3>Publicações relacionadas</h3>
+            <div class='text'>
+                Pedido de Registro INPI - 2014<br>
+                21º CBECiMat - 2014<br>
+                BCCM2 - 2014<br>
+                XLI COBENGE - 2013
+            </div>
+            <a class="btn btn-primary" href='{% url "pubs_relacionadas" %}'>Detalhes »</a>
+        </div>
+    </div>
+
+    <div id="div_inpi">
+        <img src='{% static "mechg/images/Registro INPI.png" %}'>
+    </div>
+
+{% endblock %}

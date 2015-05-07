@@ -1,0 +1,66 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Título Geral</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link href='{% static "recomendacao/css/recomendacao.css" %}' rel='stylesheet' />
+</head>
+
+<body>
+    <div id='form-search-box'>
+        <form id='form-texto'>
+            {% csrf_token %}
+            <div>
+                {{ form.texto }}
+            </div>
+            
+            <div>
+                <input type="submit" value="Enviar texto">
+            </div>
+        </form>
+        
+        <div id='custom-search'>
+            <script>
+                function gcseCallback() {
+                    if (document.readyState != 'complete') {
+                        return google.setOnLoadCallback(gcseCallback, true);
+                    }
+                    google.search.cse.element.render({gname:'gsearch', div:'results', tag:'searchresults-only', attributes:{linkTarget:''}});
+                };
+                window.__gcse = {
+                    parsetags: 'explicit',
+                    callback: gcseCallback
+                };
+                (function() {
+                    var cx = '000692798276607258081:hnimutzrgnk';
+                    var gcse = document.createElement('script');
+                    gcse.type = 'text/javascript';
+                    gcse.async = true;
+                    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+                        '//cse.google.com/cse.js?cx=' + cx;
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(gcse, s);
+                })();
+            </script>
+            <div id="results"></div>
+        </div>
+    </div>
+    
+    <div>
+        <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script>
+        
+        <script src='{% url "js" %}'></script>
+        <script src='{% url "js_aux" %}'></script>
+    </div>
+</body>
+</html>
