@@ -20,4 +20,28 @@ function documentReady() {
             }
         });
     });
+    
+    // Scripts do Google Custom Search Engine
+    function gcseCallback() {
+        /*
+        if (document.readyState != 'complete') {
+            return google.setOnLoadCallback(gcseCallback, true);
+        }
+        */
+        google.search.cse.element.render({gname:'gsearch', div:'results', tag:'searchresults-only', attributes:{linkTarget:''}});
+    };
+    window.__gcse = {
+        parsetags: 'explicit',
+        callback: gcseCallback
+    };
+    (function() {
+        var cx = '000692798276607258081:hnimutzrgnk';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//cse.google.com/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+    })();
 }
