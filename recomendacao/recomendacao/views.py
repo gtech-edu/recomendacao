@@ -45,7 +45,8 @@ def envia_texto_sobek(request):
     ])
     
     response = {
+        'texto': texto,
         'sobek_output': sobek_output.decode('latin1').split()
     }
     
-    return HttpResponse(json.dumps(response), content_type="application/json" )
+    return HttpResponse(json.dumps(response), content_type="application/json")

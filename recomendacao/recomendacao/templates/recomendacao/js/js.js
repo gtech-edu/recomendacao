@@ -12,6 +12,9 @@ function documentReady() {
             url: '{% url "envia_texto_sobek" %}',
             data: JSON.stringify({texto:texto}),
             success: function(response) {
+                console.log('Entrada do Sobek: %s', response.texto);
+                console.log('Saída do Sobek: %s', response.sobek_output);
+                
                 var element = google.search.cse.element.getElement('gsearch');
                 element.execute(response.sobek_output);
             },
