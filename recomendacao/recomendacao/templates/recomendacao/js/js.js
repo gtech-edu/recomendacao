@@ -4,7 +4,7 @@ $(document).ready(documentReady());
 function documentReady() {
     $('form').submit(false);
     
-    $('#form-texto').submit(function() {
+    $('#btn-enviar-texto').click(function() {
         var texto = $('#form-texto #id_texto').val();
         
         $.ajax({
@@ -22,6 +22,12 @@ function documentReady() {
                 jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
             }
         });
+    });
+    
+    $('#form-texto').submit(function() {
+        var texto = $('#form-texto #id_texto').val();
+        
+        $.redirect('{% url "resultados" %}', JSON.stringify({texto:texto}));
     });
     
     // Scripts do Google Custom Search Engine

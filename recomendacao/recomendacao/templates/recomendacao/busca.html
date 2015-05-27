@@ -1,0 +1,23 @@
+{% extends 'recomendacao/base.html' %}
+
+{% block content %}
+
+<div id='form-search-box'>
+    <form id='form-texto' action='{% url "resultados" %}' method='post'>
+        {% csrf_token %}
+        <div>
+            {{ form.texto }}
+        </div>
+        
+        <div>
+            <input id="btn-enviar-texto" type="button" value="Enviar texto">
+            <input id="btn-enviar-texto-post" type="submit" value="Enviar texto via POST">
+        </div>
+    </form>
+    
+    <div id='custom-search'>
+        <div id="results"></div>
+    </div>
+</div>
+
+{% endblock content %}

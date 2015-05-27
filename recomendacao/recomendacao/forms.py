@@ -7,5 +7,5 @@ class FormTexto(forms.Form):
     texto = forms.CharField(widget=forms.Textarea,)
     
     class Meta:
-        fields = ['text',]
+        fields = ['texto',]
         localized_fields = '__all__'

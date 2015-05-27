@@ -17,25 +17,12 @@
 </head>
 
 <body>
-    <div id='form-search-box'>
-        <form id='form-texto'>
-            {% csrf_token %}
-            <div>
-                {{ form.texto }}
-            </div>
-            
-            <div>
-                <input type="submit" value="Enviar texto">
-            </div>
-        </form>
-        
-        <div id='custom-search'>
-            <div id="results"></div>
-        </div>
-    </div>
+    {% block content %}{% endblock content %}
     
     <div>
         <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+        <script src='{% url "jquery_redirect_csrf" %}'></script>
+        <script src='{% static "recomendacao/js/jquery.serialize-object.compiled.js" %}'></script>
         
         <script src='{% url "js" %}'></script>
         <script src='{% url "js_aux" %}'></script>
