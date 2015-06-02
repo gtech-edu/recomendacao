@@ -2,20 +2,29 @@
 
 {% block content %}
 
-<div id='form-search-box'>
-    <form id='form-texto'>
-        {% csrf_token %}
-        <div>
-            {{ form.texto }}
-        </div>
-        
-        <div>
-            <input type="submit" value="Enviar texto">
-        </div>
-    </form>
+<style type="text/css">
+    body {
+        width: 600px;
+    }
     
-    <div id='custom-search'>
-        <div id="results"></div>
+    h3 {
+        margin-bottom: 0px;
+    }
+}
+</style>
+
+<div id='results'>
+    <div>
+        <input id="btn-baixar-xml" type="button" value="Baixar XML">
+        <input id="btn-baixar-json" type="button" value="Baixar JSON">
+    </div>
+    
+    <div>
+        {% for result in results_list %}
+            <h3><a href='{{ result.link }}'>{{ result.titulo }}</a></h3>
+            <cite>{{ result.link }}</cite><br />
+            {{ result.snippet }}
+        {% endfor %}
     </div>
 </div>
 

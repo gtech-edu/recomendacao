@@ -24,6 +24,14 @@
         <script src='{% url "jquery_redirect_csrf" %}'></script>
         <script src='{% static "recomendacao/js/jquery.serialize-object.compiled.js" %}'></script>
         
+        <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+        <script>
+            tinymce.init({
+                selector:'textarea',
+                //language_url: '{% static "recomendacao/tinymce/langs/pt.js" %}'
+            });
+        </script>
+        
         <script src='{% url "js" %}'></script>
         <script src='{% url "js_aux" %}'></script>
     </div>
