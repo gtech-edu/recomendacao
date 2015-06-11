@@ -8,6 +8,10 @@ cite {
     color: rgb(0, 102, 33);
 }
 
+.hidden {
+    display: none;
+}
+
 #form-search-box {
     display: flex;
 }
@@ -19,3 +23,11 @@ cite {
     #custom-search {
         flex: 1;
     }
+
+#form-baixar-xml {
+    display: inline;
+}
+
+#form-baixar-json {
+    display: inline;
+}

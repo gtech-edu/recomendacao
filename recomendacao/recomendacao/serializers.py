@@ -3,9 +3,9 @@
 from rest_framework import serializers
 
 
-class SerializerTexto(serializers.Serializer):
-    texto = serializers.CharField()
+class SerializerText(serializers.Serializer):
+    text = serializers.CharField()
     
     class Meta:
-        fields = ['texto',]
+        fields = ['text',]
         localized_fields = '__all__'

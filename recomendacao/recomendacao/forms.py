@@ -3,9 +3,9 @@
 from django import forms
 
 
-class FormTexto(forms.Form):
-    texto = forms.CharField(widget=forms.Textarea,)
+class FormText(forms.Form):
+    text = forms.CharField(widget=forms.Textarea,)
     
     class Meta:
-        fields = ['texto',]
+        fields = ['text',]
         localized_fields = '__all__'

@@ -14,15 +14,20 @@
 </style>
 
 <div id='results'>
-    <div>
-        <input id="btn-baixar-xml" type="button" value="Baixar XML">
-        <input id="btn-baixar-json" type="button" value="Baixar JSON">
-    </div>
+    <form id="form-baixar-xml" method='POST'>
+        {% csrf_token %}
+        <input type="submit" value="Baixar XML" />
+    </form>
+
+    <form id="form-baixar-json" method='POST'>
+        {% csrf_token %}
+        <input type="submit" value="Baixar JSON" />
+    </form>
     
     <div>
         {% for result in results_list %}
-            <h3><a href='{{ result.link }}'>{{ result.titulo }}</a></h3>
-            <cite>{{ result.link }}</cite><br />
+            <h3><a href='{{ result.url }}'>{{ result.title }}</a></h3>
+            <cite>{{ result.url }}</cite><br />
             {{ result.snippet }}
         {% endfor %}
     </div>
