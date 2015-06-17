@@ -14,6 +14,7 @@ import os
 import subprocess
 import json
 import urllib
+from collections import OrderedDict
 
 from recomendacao.forms import FormText
 from recomendacao.serializers import SerializerText
@@ -83,7 +84,7 @@ class EnviaTexto(APIView):
             
             results_list = []
             for res in results:
-                result_dict = {}
+                result_dict = OrderedDict()
                 result_dict['title'] = res.title
                 result_dict['url'] = res.url
                 result_dict['snippet'] = res.desc
@@ -93,10 +94,10 @@ class EnviaTexto(APIView):
                 'results_list': results_list
             }
             
-            #if request.accepted_renderer.format == 'json':
-            #    response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados.html'))
-            #    response['Content-Disposition'] = 'attachment; filename=' + '"resultados.json"'
-            #else:
+            if request.accepted_renderer.format == 'html':
+                response_data['text'] = text
+                response_data['sobek_output'] = sobek_output.split()
+                
             response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados.html'))
             
             return response

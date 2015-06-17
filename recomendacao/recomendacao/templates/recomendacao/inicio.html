@@ -1,0 +1,13 @@
+{% extends 'recomendacao/base.html' %}
+
+{% block content %}
+
+<div>
+    <a href='{% url "v1" %}'>{{ absolute_root }}{% url "v1" %}</a>
+</div>
+
+<div>
+    <a href='{% url "v2" %}'>{{ absolute_root }}{% url "v2" %}</a>
+</div>
+
+{% endblock content %}

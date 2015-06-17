@@ -23,9 +23,9 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
     
     #project
-    url(r'^$', views.ViewBusca.as_view(template_name='busca.html'), name='base'),
-    url(r'^v1/$', views.ViewBusca.as_view(template_name='busca.html'), name='busca'),
-    url(r'^v2/$', views.ViewBusca.as_view(template_name='busca-post.html'), name='busca_post'),
+    url(r'^$', TemplateView.as_view(template_name=os.path.join(APP_NAME, 'inicio.html')), name='inicio'),
+    url(r'^v1/$', views.ViewBusca.as_view(template_name='busca.html'), name='v1'),
+    url(r'^v2/$', views.ViewBusca.as_view(template_name='busca-post.html'), name='v2'),
     
     url(r'^envia-texto-sobek/$', views.envia_texto_sobek, name='envia_texto_sobek'),
     

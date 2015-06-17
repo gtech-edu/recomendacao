@@ -2,17 +2,6 @@
 
 {% block content %}
 
-<style type="text/css">
-    body {
-        width: 600px;
-    }
-    
-    h3 {
-        margin-bottom: 0px;
-    }
-}
-</style>
-
 <div id='results'>
     <form id="form-baixar-xml" method='POST'>
         {% csrf_token %}
@@ -32,5 +21,18 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+    var sobek_output = '';
+    
+    console.log('Entrada do Sobek: %s', '{{ text }}');
+    
+    {% for word in sobek_output %}
+        sobek_output += '{{ word }},';
+    {% endfor %}
+    sobek_output = sobek_output.slice(0, -1);
+    
+    console.log('Saída do Sobek: %s', sobek_output);
+</script>
 
 {% endblock content %}

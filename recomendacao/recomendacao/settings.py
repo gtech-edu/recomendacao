@@ -27,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['gtech-srv01.nuvem.ufrgs.br']
+ALLOWED_HOSTS = ['gtech-srv01.nuvem.ufrgs.br', '143.54.95.100']
 
 
 # Application definition
@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                APP_NAME + '.context_processors.full_absolute_urls',
             ],
         },
     },
@@ -113,11 +114,10 @@ else:
     STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
-  'DEFAULT_RENDERER_CLASSES': (
-    'rest_framework.renderers.TemplateHTMLRenderer',
-    'rest_framework.renderers.JSONRenderer',
-    'rest_framework_xml.renderers.XMLRenderer',
-    'rest_framework.renderers.BrowsableAPIRenderer',
-    
-  )
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.TemplateHTMLRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework_xml.renderers.XMLRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
 }

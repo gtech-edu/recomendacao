@@ -2,15 +2,8 @@
 
 {% block content %}
 
-<style type="text/css">
-    body {
-        width: 600px;
-    }
-}
-</style>
-
 <div id='form-search-box'>
-    <form id='form-texto' method='post'>
+    <form id='form-texto-post' method='post'>
         {% csrf_token %}
         <div>
             {{ form.text }}

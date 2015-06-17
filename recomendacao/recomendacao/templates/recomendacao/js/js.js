@@ -2,10 +2,8 @@ $(document).ready(document_ready());
 
 // Ao carregar a página, realiza os seguintes procedimentos automaticamente:
 function document_ready() {
-    $('form').submit(false);
-    
-    $('#btn-enviar-texto').click(function() {
-        //var text = $('#form-texto #id_texto').val();
+    $('#form-texto').submit(function(event) {
+        //var text = $('#form-texto #id_text').val();
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
         
         $.ajax({
@@ -23,52 +21,32 @@ function document_ready() {
                 jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
             }
         });
-    });
-    
-    $('#form-texto').submit(function() {
-        //var text = $('#form-texto #id_texto').val();
-        var text = tinyMCE.activeEditor.getContent({format : 'text'});
         
-        $.ajax({
-            type: 'POST',
-            url: '{% url "post" %}',
-            data: JSON.stringify({text:text}),
-            headers: {
-                'content-type': 'application/json; charset=utf-8',
-                'accept': 'text/html; charset=utf-8'
-            },
-            success: function(data, status, jqXHR) {
-                var newDoc = document.open();
-                newDoc.write(jqXHR.responseText);
-                newDoc.close();
-                
-                //var newDoc = window.open();
-                //newDoc.document.open();
-                //newDoc.document.write(jqXHR.responseText);
-                //newDoc.document.close();
-            },
-            beforeSend: function(jqXHR, settings) {
-                jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
-            }
-        });
+        return false;
     });
     
-    $('#form-baixar-xml').off('submit');
+    $('#form-texto-post').submit(function(event) {
+        //var text = tinyMCE.activeEditor.getContent({format : 'text'});
+        //var data = {text:text};
+        
+        //append_hidden_inputs(event.target, data);
+        $(event.target).prop('action', '{% url "post" %}');
+    });
+    
     $('#form-baixar-xml').submit(function(event) {
         var text = 'xml xml'
         var data = {text:text};
         
         append_hidden_inputs(event.target, data);
-        $("#form-baixar-xml").prop('action', '{% url "post" %}.xml');
+        $(event.target).prop('action', '{% url "post" %}.xml');
     });
     
-    $('#form-baixar-json').off('submit');
     $('#form-baixar-json').submit(function(event) {
         var text = 'json json';
         var data = {text:text};
         
         append_hidden_inputs(event.target, data);
-        $("#form-baixar-json").prop('action', '{% url "post" %}.json');
+        $(event.target).prop('action', '{% url "post" %}.json');
     });
 }
 
