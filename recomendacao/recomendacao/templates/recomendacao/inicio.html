@@ -2,12 +2,18 @@
 
 {% block content %}
 
-<div>
-    <a href='{% url "v1" %}'>{{ absolute_root }}{% url "v1" %}</a>
-</div>
+<style>
+    body {
+        text-align: center;
+    }
+</style>
 
+<h1> Web Service de Recomendação <br/> GTech-Edu/CoPPla </h1>
 <div>
-    <a href='{% url "v2" %}'>{{ absolute_root }}{% url "v2" %}</a>
+    <a href='{% url "v1" %}'>Versão 1</a>
+</div>
+<div>
+    <a href='{% url "v2" %}'>Versão 2</a>
 </div>
 
 {% endblock content %}

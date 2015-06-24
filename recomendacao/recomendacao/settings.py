@@ -72,6 +72,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 APP_NAME + '.context_processors.full_absolute_urls',
+                APP_NAME + '.context_processors.settings',
             ],
         },
     },
@@ -108,10 +109,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 if not DEBUG:
     STATIC_URL = '/' + APP_NAME + '/static/'
 else:
     STATIC_URL = '/static/'
+
+
+if not DEBUG:
+    FILES_URL = '/' + APP_NAME + '/files/'
+else:
+    FILES_URL = '/files/'
+
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (

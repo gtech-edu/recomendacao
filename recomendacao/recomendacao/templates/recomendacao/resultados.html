@@ -3,15 +3,12 @@
 {% block content %}
 
 <div id='results'>
-    <form id="form-baixar-xml" method='POST'>
-        {% csrf_token %}
-        <input type="submit" value="Baixar XML" />
-    </form>
-
-    <form id="form-baixar-json" method='POST'>
-        {% csrf_token %}
-        <input type="submit" value="Baixar JSON" />
-    </form>
+    <div>
+        <a href='{{ FILES_URL }}{{ text_hash }}.xml'>Baixar XML</a>
+    </div>
+    <div>
+        <a href='{{ FILES_URL }}{{ text_hash }}.json'>Baixar JSON</a>
+    </div>
     
     <div>
         {% for result in results_list %}
@@ -24,8 +21,6 @@
 
 <script>
     var sobek_output = '';
-    
-    console.log('Entrada do Sobek: %s', '{{ text }}');
     
     {% for word in sobek_output %}
         sobek_output += '{{ word }},';

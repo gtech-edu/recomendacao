@@ -57,3 +57,5 @@ docs/_build/
 target/
 
 settings_secret.py
+/recomendacao/files/*
+/recomendacao/static/*

@@ -9,11 +9,14 @@ from django.utils.html import strip_tags, escape
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.renderers import JSONRenderer
+from rest_framework_xml.renderers import XMLRenderer
 
 import os
 import subprocess
 import json
 import urllib
+import hashlib
 from collections import OrderedDict
 
 from recomendacao.forms import FormText
@@ -48,12 +51,16 @@ class ViewBusca(View):
         return render(request, os.path.join(APP_NAME, self.template_name), context)
 
 def executa_sobek(text):
-    sobek_path = os.path.join(BASE_DIR, APP_NAME, 'files', 'webServiceSobek_Otavio.jar')
+    sobek_path = os.path.join(BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
     text = urllib.quote(encode_string(text))
     
     sobek_command = ['java', '-Dfile.encoding=' + ENCODING, '-jar', encode_string(sobek_path), '-b', '-t', '"' + encode_string(text) + '"']
     sobek_output = subprocess.check_output(sobek_command)
     return sobek_output
+
+def serialize_render(data, renderer_class):
+    renderer = renderer_class()
+    return renderer.render(data)
 
 def envia_texto_sobek(request):
     request_body = json.loads(request.body)
@@ -64,7 +71,6 @@ def envia_texto_sobek(request):
     sobek_output = executa_sobek(text)
     
     response = {
-        'text': text,
         'sobek_output': sobek_output.split()
     }
     
@@ -95,10 +101,24 @@ class EnviaTexto(APIView):
             }
             
             if request.accepted_renderer.format == 'html':
-                response_data['text'] = text
+                text_hash = hashlib.sha224(text).hexdigest()
+                
+                xml_response_data = serialize_render(results_list, XMLRenderer)
+                self.create_response_data_file(xml_response_data, text_hash, XMLRenderer.format)
+                
+                json_response_data = serialize_render(results_list, JSONRenderer)
+                self.create_response_data_file(json_response_data, text_hash, JSONRenderer.format)
+                
+                response_data['text_hash'] = text_hash
                 response_data['sobek_output'] = sobek_output.split()
                 
             response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados.html'))
             
             return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def create_response_data_file(self, response_data, text_hash, file_format):
+        filename = text_hash + '.' + file_format
+        with open(os.path.join(BASE_DIR, 'files', filename), 'wb') as response_data_file:
+            response_data_file.write(response_data)
+            response_data_file.close()

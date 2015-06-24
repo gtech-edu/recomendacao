@@ -1,4 +1,5 @@
-from django.core.urlresolvers import reverse
+from recomendacao.settings import FILES_URL
+
 
 def full_absolute_urls(request):
     context = {
@@ -6,5 +7,11 @@ def full_absolute_urls(request):
         'full_url': request.build_absolute_uri('?'),
         'absolute_root': request.build_absolute_uri('/')[:-1].strip("/"),
         'absolute_root_url': request.build_absolute_uri('/').strip("/"),
+    }
+    return context
+
+def settings(request):
+    context = {
+        'FILES_URL': FILES_URL,
     }
     return context
