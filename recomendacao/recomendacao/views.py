@@ -101,7 +101,7 @@ class EnviaTexto(APIView):
             }
             
             if request.accepted_renderer.format == 'html':
-                text_hash = hashlib.sha224(text).hexdigest()
+                text_hash = hashlib.sha224(encode_string(text)).hexdigest()
                 
                 xml_response_data = serialize_render(results_list, XMLRenderer)
                 self.create_response_data_file(xml_response_data, text_hash, XMLRenderer.format)

@@ -11,7 +11,14 @@ function document_ready() {
             url: '{% url "envia_texto_sobek" %}',
             data: JSON.stringify({text:text}),
             success: function(response) {
-                console.log('Saída do Sobek: %s', response.sobek_output);
+                var sobek_output = '';
+                
+                for (word in response.sobek_output) {
+                    sobek_output += response.sobek_output[word] + ',';
+                }
+                sobek_output = sobek_output.slice(0, -1);
+                
+                console.log('Saída do Sobek: %s', sobek_output);
                 
                 var element = google.search.cse.element.getElement('gsearch');
                 element.execute(response.sobek_output);
@@ -25,34 +32,18 @@ function document_ready() {
     });
     
     $('#form-texto-post').submit(function(event) {
-        //var text = tinyMCE.activeEditor.getContent({format : 'text'});
-        //var data = {text:text};
+        var text = tinyMCE.activeEditor.getContent({format : 'text'});
+        var data = {text:text};
         
-        //append_hidden_inputs(event.target, data);
+        append_hidden_inputs(event.target, data);
         $(event.target).prop('action', '{% url "post" %}');
-    });
-    
-    $('#form-baixar-xml').submit(function(event) {
-        var text = 'xml xml'
-        var data = {text:text};
-        
-        append_hidden_inputs(event.target, data);
-        $(event.target).prop('action', '{% url "post" %}.xml');
-    });
-    
-    $('#form-baixar-json').submit(function(event) {
-        var text = 'json json';
-        var data = {text:text};
-        
-        append_hidden_inputs(event.target, data);
-        $(event.target).prop('action', '{% url "post" %}.json');
     });
 }
 
 function append_hidden_inputs(form, data) {
     for (i in data) {
         input = $('<input>').prop({'type': 'hidden', 'name': i}).val(data[i]);
-        old_input = $(form).find('input[name="' + i +'"]').first();
+        old_input = $(form).find('[name="' + i +'"]').first();
         input_exists = old_input.length;
         
         if (!input_exists) {
