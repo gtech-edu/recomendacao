@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from django.core.context_processors import csrf
 from django.http import HttpResponse
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from django.utils.html import strip_tags, escape
 
 from rest_framework.views import APIView
@@ -21,10 +21,10 @@ from collections import OrderedDict
 
 from recomendacao.forms import FormText
 from recomendacao.serializers import SerializerText
-from recomendacao.search import GoogleSearchUserAgentText
+from recomendacao.search import GoogleSearchUserAgentCSE
 
 from recomendacao.settings import BASE_DIR
-from recomendacao.const import APP_NAME, ENCODING
+from recomendacao.const import APP_NAME, ENCODING, CSE_ID
 
 
 def strip_escape(text):
@@ -37,6 +37,14 @@ def encode_string(string):
 
 def decode_string(string):
     return string.decode(ENCODING)
+
+class TemplateViewContext(TemplateView):
+    extra_context = None
+    
+    def get_context_data(self, **kwargs):
+        context = super(TemplateViewContext, self).get_context_data(**kwargs)
+        context.update(self.extra_context)
+        return context
 
 class ViewBusca(View):
     template_name = None
@@ -85,7 +93,7 @@ class EnviaTexto(APIView):
             
             sobek_output = executa_sobek(text)
             
-            gs = GoogleSearchUserAgentText(sobek_output, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br')
+            gs = GoogleSearchUserAgentCSE(sobek_output, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
             results = gs.get_results()
             
             results_list = []

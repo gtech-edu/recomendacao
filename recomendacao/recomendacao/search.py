@@ -3,14 +3,81 @@
 import re
 import urllib
 
-from xgoogle.search import GoogleSearch, ParseError
-from xgoogle.browser import Browser, BROWSERS
+from xgoogle.search import GoogleSearch, SearchError, ParseError
+from xgoogle.browser import Browser, BrowserError, BROWSERS
+from xgoogle.BeautifulSoup import BeautifulSoup
 
 
 class GoogleSearchUserAgent(GoogleSearch):
     def __init__(self, query, user_agent=BROWSERS[0], debug=False, **kwargs):
         super(GoogleSearchUserAgent, self).__init__(query, **kwargs)
         self.browser = Browser(user_agent=user_agent, debug=debug)
+
+class GoogleSearchUserAgentCSE(GoogleSearchUserAgent):
+    SEARCH_URL_0 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&btnG=Google+Search"
+    NEXT_PAGE_0 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&start=%(start)d"
+    SEARCH_URL_1 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&num=%(num)d&btnG=Google+Search"
+    NEXT_PAGE_1 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&num=%(num)d&start=%(start)d"
+    
+    def __init__(self, query, cx=None, **kwargs):
+        super(GoogleSearchUserAgentCSE, self).__init__(query, **kwargs)
+        self._cx = cx
+        self._nojs = '1'
+    
+    def _get_results_page(self):
+        if self._page == 0:
+            if self._results_per_page == 10:
+                url = self.SEARCH_URL_0
+            else:
+                url = self.SEARCH_URL_1
+        else:
+            if self._results_per_page == 10:
+                url = self.NEXT_PAGE_0
+            else:
+                url = self.NEXT_PAGE_1
+
+        safe_url = [url % { 'query': urllib.quote_plus(self.query),
+                           'start': self._page * self._results_per_page,
+                           'num': self._results_per_page,
+                           'tld' : self._tld,
+                           'lang' : self._lang }]
+        
+        # possibly extend url with optional properties
+        if self._first_indexed_in_previous:
+            safe_url.extend(["&as_qdr=", self._first_indexed_in_previous])
+        if self._filetype:
+            safe_url.extend(["&as_filetype=", self._filetype])
+        if self._cx:
+            safe_url.extend(["&cx=", self._cx])
+            safe_url.extend(["&nojs=", self._nojs])
+        
+        safe_url = "".join(safe_url)
+        self._last_search_url = safe_url
+        
+        try:
+            page = self.browser.get_page(safe_url)
+        except BrowserError, e:
+            raise SearchError, "Failed getting %s: %s" % (e.url, e.error)
+
+        return BeautifulSoup(page)
+    
+    def _extract_results(self, soup):
+        results = soup.findAll('div', {'class': 'g'})
+        ret_res = []
+        for result in results:
+            eres = self._extract_result(result)
+            if eres:
+                ret_res.append(eres)
+        return ret_res
+    
+    def _extract_description(self, result):
+        desc_span = result.find('span', {'class': 's'})
+        if not desc_span:
+            self._maybe_raise(ParseError, "Description tag in Google search result was not found", result)
+            return None
+        
+        desc = ''.join(desc_span.findAll(text=True))
+        return self._html_unescape(desc)
 
 class GoogleSearchUserAgentHTML(GoogleSearchUserAgent):
     def _extract_title_url(self, result):

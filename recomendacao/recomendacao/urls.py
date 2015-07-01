@@ -1,5 +1,4 @@
 from django.conf.urls import include, url
-from django.views.generic import TemplateView
 from django.contrib import admin
 admin.autodiscover()
 
@@ -9,7 +8,7 @@ import os
 
 from recomendacao import views
 
-from recomendacao.const import APP_NAME
+from recomendacao.const import APP_NAME, CSE_ID
 
 
 api_urlpatterns = [
@@ -23,15 +22,15 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
     
     #project
-    url(r'^$', TemplateView.as_view(template_name=os.path.join(APP_NAME, 'inicio.html')), name='inicio'),
+    url(r'^$', views.TemplateViewContext.as_view(template_name=os.path.join(APP_NAME, 'inicio.html')), name='inicio'),
     url(r'^v1/$', views.ViewBusca.as_view(template_name='busca.html'), name='v1'),
     url(r'^v2/$', views.ViewBusca.as_view(template_name='busca-post.html'), name='v2'),
     
     url(r'^envia-texto-sobek/$', views.envia_texto_sobek, name='envia_texto_sobek'),
     
-    url(r'^js/$', TemplateView.as_view(template_name=os.path.join(APP_NAME, 'js', 'js.js')), name='js'),
-    url(r'^js-aux/$', TemplateView.as_view(template_name=os.path.join(APP_NAME, 'js', 'js-aux.js')), name='js_aux'),
-    url(r'^jquery.redirect.csrf.js$', TemplateView.as_view(template_name=os.path.join(APP_NAME, 'js', 'jquery.redirect.csrf.js')), name='jquery_redirect_csrf'),
+    url(r'^js/$', views.TemplateViewContext.as_view(template_name=os.path.join(APP_NAME, 'js', 'js.js'), extra_context={'CSE_ID': CSE_ID}), name='js'),
+    url(r'^js-aux/$', views.TemplateViewContext.as_view(template_name=os.path.join(APP_NAME, 'js', 'js-aux.js')), name='js_aux'),
+    url(r'^jquery.redirect.csrf.js$', views.TemplateViewContext.as_view(template_name=os.path.join(APP_NAME, 'js', 'jquery.redirect.csrf.js')), name='jquery_redirect_csrf'),
     
     #admin
     url(r'^admin/', include(admin.site.urls)),

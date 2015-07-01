@@ -69,7 +69,7 @@ window.__gcse = {
     callback: gcseCallback
 };
 (function() {
-    var cx = '000692798276607258081:hnimutzrgnk';
+    var cx = '{{ CSE_ID }}';
     var gcse = document.createElement('script');
     gcse.type = 'text/javascript';
     gcse.async = true;
