@@ -2,12 +2,16 @@
 
 {% block content %}
 
+<style>
+    #results-files {
+        text-align: center;
+    }
+</style>
+
 <div id='results'>
-    <div>
-        <a href='{{ FILES_URL }}{{ text_hash }}.xml'>Baixar XML</a>
-    </div>
-    <div>
-        <a href='{{ FILES_URL }}{{ text_hash }}.json'>Baixar JSON</a>
+    <div id='results-files'>
+        <a href='{{ FILES_URL }}{{ text_hash }}.xml' target='_blank'>XML</a>
+        <a href='{{ FILES_URL }}{{ text_hash }}.json' target='_blank'>JSON</a>
     </div>
     
     <div>
