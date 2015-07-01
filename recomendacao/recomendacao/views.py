@@ -39,7 +39,7 @@ def decode_string(string):
     return string.decode(ENCODING)
 
 class TemplateViewContext(TemplateView):
-    extra_context = None
+    extra_context = {}
     
     def get_context_data(self, **kwargs):
         context = super(TemplateViewContext, self).get_context_data(**kwargs)
