@@ -62,8 +62,13 @@ def executa_sobek(text):
     sobek_path = os.path.join(BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
     text = urllib.quote(encode_string(text))
     
-    sobek_command = ['java', '-Dfile.encoding=' + ENCODING, '-jar', encode_string(sobek_path), '-b', '-t', '"' + encode_string(text) + '"']
-    sobek_output = subprocess.check_output(sobek_command)
+    try:
+        sobek_command = ['java', '-Dfile.encoding=' + ENCODING, '-jar', encode_string(sobek_path), '-b', '-t', '"' + encode_string(text) + '"']
+        sobek_output = subprocess.check_output(sobek_command)
+    except subprocess.CalledProcessError:
+        sobek_command = ['java', '-Dfile.encoding=' + ENCODING, '-jar', encode_string(sobek_path), '-b', '-m', '1', '-t', '"' + encode_string(text) + '"']
+        sobek_output = subprocess.check_output(sobek_command)
+    
     return sobek_output
 
 def serialize_render(data, renderer_class):
