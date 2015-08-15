@@ -4,25 +4,26 @@ import re
 import urllib
 
 from xgoogle.search import GoogleSearch, SearchError, ParseError
-from xgoogle.browser import Browser, BrowserError, BROWSERS
+from recomendacao.browser import BrowserSelenium
+from xgoogle.browser import BrowserError, BROWSERS
 from xgoogle.BeautifulSoup import BeautifulSoup
 
 
 class GoogleSearchUserAgent(GoogleSearch):
     def __init__(self, query, user_agent=BROWSERS[0], debug=False, **kwargs):
         super(GoogleSearchUserAgent, self).__init__(query, **kwargs)
-        self.browser = Browser(user_agent=user_agent, debug=debug)
+        self.browser = BrowserSelenium(user_agent=user_agent, debug=debug)
 
-class GoogleSearchUserAgentCSE(GoogleSearchUserAgent):
+class GoogleSearchUserAgentCse(GoogleSearchUserAgent):
     SEARCH_URL_0 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&btnG=Google+Search"
     NEXT_PAGE_0 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&start=%(start)d"
     SEARCH_URL_1 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&num=%(num)d&btnG=Google+Search"
     NEXT_PAGE_1 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&num=%(num)d&start=%(start)d"
     
     def __init__(self, query, cx=None, **kwargs):
-        super(GoogleSearchUserAgentCSE, self).__init__(query, **kwargs)
+        super(GoogleSearchUserAgentCse, self).__init__(query, **kwargs)
         self._cx = cx
-        self._nojs = '1'
+        self._nojs = '0' # The nojs parameter is no longer supported
     
     def _get_results_page(self):
         if self._page == 0:
@@ -79,7 +80,26 @@ class GoogleSearchUserAgentCSE(GoogleSearchUserAgent):
         desc = ''.join(desc_span.findAll(text=True))
         return self._html_unescape(desc)
 
-class GoogleSearchUserAgentHTML(GoogleSearchUserAgent):
+class GoogleSearchUserAgentCseSelenium(GoogleSearchUserAgentCse):
+    def _extract_results(self, soup):
+        results = soup.findAll('div', {'class': 'gs-webResult gs-result', 'data-vars': None})
+        ret_res = []
+        for result in results:
+            eres = self._extract_result(result)
+            if eres:
+                ret_res.append(eres)
+        return ret_res
+    
+    def _extract_description(self, result):
+        desc_span = result.find('div', {'class': 'gs-bidi-start-align gs-snippet'})
+        if not desc_span:
+            self._maybe_raise(ParseError, "Description tag in Google search result was not found", result)
+            return None
+        
+        desc = ''.join(desc_span.findAll(text=True))
+        return self._html_unescape(desc)
+
+class GoogleSearchUserAgentHtml(GoogleSearchUserAgent):
     def _extract_title_url(self, result):
         title_h3 = result.find('h3', {'class': 'r'})
         title_a = result.find('a')

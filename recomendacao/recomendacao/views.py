@@ -21,7 +21,7 @@ from collections import OrderedDict
 
 from recomendacao.forms import FormText
 from recomendacao.serializers import SerializerText
-from recomendacao.search import GoogleSearchUserAgentCSE
+from recomendacao.search import GoogleSearchUserAgentCseSelenium
 
 from recomendacao.settings import BASE_DIR
 from recomendacao.const import APP_NAME, ENCODING, CSE_ID
@@ -29,7 +29,7 @@ from recomendacao.const import APP_NAME, ENCODING, CSE_ID
 
 def strip_escape(text):
     text = strip_tags(text)
-    text = escape(text)
+    #text = escape(text)
     return text
 
 def encode_string(string):
@@ -56,7 +56,7 @@ class ViewBusca(View):
             'form': form_text
         }
         context.update(csrf(request))
-        return render(request, os.path.join(APP_NAME, self.template_name), context)
+        return render(request, self.template_name, context)
 
 def executa_sobek(text):
     sobek_path = os.path.join(BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
@@ -98,7 +98,7 @@ class EnviaTexto(APIView):
             
             sobek_output = executa_sobek(text)
             
-            gs = GoogleSearchUserAgentCSE(sobek_output, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+            gs = GoogleSearchUserAgentCseSelenium(sobek_output, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
             results = gs.get_results()
             
             results_list = []

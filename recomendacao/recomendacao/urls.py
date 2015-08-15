@@ -23,8 +23,8 @@ urlpatterns = [
     
     #project
     url(r'^$', views.TemplateViewContext.as_view(template_name=os.path.join(APP_NAME, 'inicio.html')), name='inicio'),
-    url(r'^v1/$', views.ViewBusca.as_view(template_name='busca.html'), name='v1'),
-    url(r'^v2/$', views.ViewBusca.as_view(template_name='busca-post.html'), name='v2'),
+    url(r'^v1/$', views.ViewBusca.as_view(template_name=os.path.join(APP_NAME, 'busca.html')), name='v1'),
+    url(r'^v2/$', views.ViewBusca.as_view(template_name=os.path.join(APP_NAME, 'busca-post.html')), name='v2'),
     
     url(r'^envia-texto-sobek/$', views.envia_texto_sobek, name='envia_texto_sobek'),
     
