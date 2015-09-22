@@ -16,7 +16,7 @@
     
     <div>
         {% for result in results_list %}
-            <h3><a href='{{ result.url }}'>{{ result.title }}</a></h3>
+            <h3><a href='{{ result.url }}' target='_blank'>{{ result.title }}</a></h3>
             <cite>{{ result.url }}</cite><br />
             {{ result.snippet }}
         {% endfor %}
