@@ -11,13 +11,7 @@ function document_ready() {
             url: '{% url "envia_texto_sobek" %}',
             data: JSON.stringify({text:text}),
             success: function(response) {
-                var sobek_output = '';
-                
-                for (word in response.sobek_output) {
-                    sobek_output += response.sobek_output[word] + ',';
-                }
-                sobek_output = sobek_output.slice(0, -1);
-                
+                var sobek_output = convert_list_of_strings_to_string(response.sobek_output);
                 console.log('Saída do Sobek: %s', sobek_output);
                 
                 var element = google.search.cse.element.getElement('gsearch');
@@ -38,6 +32,53 @@ function document_ready() {
         append_hidden_inputs(event.target, data);
         $(event.target).prop('action', '{% url "post" %}');
     });
+    
+    $('#btn-enviar-texto-ajax').click(function(event) {
+        var text = tinyMCE.activeEditor.getContent({format : 'text'});
+        var mode = $('#id_mode').val();
+        
+        $.ajax({
+            type: 'POST',
+            url: '{% url "post" %}',
+            data: JSON.stringify({text: text, mode: mode}),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                var sobek_output = convert_list_of_strings_to_string(response.sobek_output);
+                console.log('Saída do Sobek: %s', sobek_output);
+                
+                var words = '';
+                var result = {};
+                
+                $('#results-ajax').html('');
+                
+                if (is_defined(response.sobek_output)) {
+                    $('#results-ajax').append('<div>');
+                    for (word_index in response.sobek_output) {
+                        words += response.sobek_output[word_index] + ' ';
+                    }
+                    words = words.slice(0, -1);
+                    $('#results-ajax').append(words);
+                    $('#results-ajax').append('</div>');
+                }
+                
+                if (is_defined(response.results_list)) {
+                    $('#results-ajax').append('<div>');
+                    for (result_index in response.results_list) {
+                        result = response.results_list[result_index];
+                        
+                        $('#results-ajax').append('<h3><a href=' + result.url + ' target="_blank">' + result.title + '</a></h3>');
+                        $('#results-ajax').append('<cite>' + result.url + '</cite><br />');
+                        $('#results-ajax').append(result.snippet);
+                    }
+                    $('#results-ajax').append('</div>');
+                }
+            },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+            }
+        });
+    });
 }
 
 function append_hidden_inputs(form, data) {
@@ -54,6 +95,25 @@ function append_hidden_inputs(form, data) {
         }
     }
 }
+
+function convert_list_of_strings_to_string(list) {
+    var output_string = '';
+    for (string_index in list) {
+        output_string += list[string_index] + ',';
+    }
+    output_string = output_string.slice(0, -1);
+    return output_string;
+}
+
+function is_defined(variable) {
+    if (typeof variable !== 'undefined') {
+        return true; // variable is defined
+    }
+    else {
+        return false; // variable is undefined
+    }
+}
+
 
 //Scripts do Google Custom Search Engine
 function gcseCallback() {

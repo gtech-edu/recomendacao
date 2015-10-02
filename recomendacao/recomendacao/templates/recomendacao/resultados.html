@@ -15,6 +15,12 @@
     </div>
     
     <div>
+        {% for word in sobek_output %}
+            {{ word }}
+        {% endfor %}
+    </div>
+    
+    <div>
         {% for result in results_list %}
             <h3><a href='{{ result.url }}' target='_blank'>{{ result.title }}</a></h3>
             <cite>{{ result.url }}</cite><br />

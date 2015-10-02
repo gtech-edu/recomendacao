@@ -10,9 +10,16 @@
         </div>
         
         <div>
-            <input id="btn-enviar-texto-post" type="submit" value="Enviar texto via POST">
+            Modo: {{ form.mode }}
+        </div>
+        
+        <div>
+            <input id='btn-enviar-texto-post' type='submit' value='Enviar texto via POST'>
+            <input id='btn-enviar-texto-ajax' type='button' value='Enviar texto via POST (Ajax)'>
         </div>
     </form>
 </div>
+
+<div id='results-ajax'></div>
 
 {% endblock content %}

@@ -96,37 +96,50 @@ class EnviaTexto(APIView):
             text = request.DATA['text']
             text = strip_escape(text)
             
-            sobek_output = executa_sobek(text)
+            if 'mode' not in request.DATA:
+                request.DATA['mode'] = 'default'
+            mode = request.DATA['mode']
             
-            gs = GoogleSearchUserAgentCseSelenium(sobek_output, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
-            results = gs.get_results()
+            response_data = {}
             
-            results_list = []
-            for res in results:
-                result_dict = OrderedDict()
-                result_dict['title'] = res.title
-                result_dict['url'] = res.url
-                result_dict['snippet'] = res.desc
-                results_list.append(result_dict)
             
-            response_data = {
-                'results_list': results_list
-            }
+            if mode != 'google':
+                sobek_output = executa_sobek(text)
+                search_input = sobek_output
+                
+                response_data['sobek_output'] = decode_string(sobek_output).split()
+            else:
+                search_input = encode_string(text)
+            
+            
+            if mode != 'sobek':
+                gs = GoogleSearchUserAgentCseSelenium(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+                results = gs.get_results()
+                
+                results_list = []
+                for res in results:
+                    result_dict = OrderedDict()
+                    result_dict['title'] = res.title
+                    result_dict['url'] = res.url
+                    result_dict['snippet'] = res.desc
+                    results_list.append(result_dict)
+                
+                response_data['results_list'] = results_list
+            
             
             if request.accepted_renderer.format == 'html':
                 text_hash = hashlib.sha224(encode_string(text)).hexdigest()
                 
-                xml_response_data = serialize_render(results_list, XMLRenderer)
+                response_data['text_hash'] = text_hash
+                
+                xml_response_data = serialize_render(response_data, XMLRenderer)
                 self.create_response_data_file(xml_response_data, text_hash, XMLRenderer.format)
                 
-                json_response_data = serialize_render(results_list, JSONRenderer)
+                json_response_data = serialize_render(response_data, JSONRenderer)
                 self.create_response_data_file(json_response_data, text_hash, JSONRenderer.format)
-                
-                response_data['text_hash'] = text_hash
-                response_data['sobek_output'] = sobek_output.split()
-                
-            response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados.html'))
             
+            
+            response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados.html'))
             return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
