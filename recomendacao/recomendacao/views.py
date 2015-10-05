@@ -60,7 +60,7 @@ class ViewBusca(View):
 
 def executa_sobek(text):
     sobek_path = os.path.join(BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
-    text = urllib.quote(encode_string(text))
+    text = urllib.quote(text)
     
     try:
         sobek_command = ['java', '-Dfile.encoding=' + ENCODING, '-jar', encode_string(sobek_path), '-b', '-t', '"' + encode_string(text) + '"']
@@ -71,9 +71,24 @@ def executa_sobek(text):
     
     return sobek_output
 
+def executa_xgoogle(search_input, request):
+    gs = GoogleSearchUserAgentCseSelenium(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+    results = gs.get_results()
+    
+    results_list = []
+    for res in results:
+        result_dict = OrderedDict()
+        result_dict['title'] = res.title
+        result_dict['url'] = res.url
+        result_dict['snippet'] = res.desc
+        results_list.append(result_dict)
+    
+    return results_list
+
 def serialize_render(data, renderer_class):
     renderer = renderer_class()
     return renderer.render(data)
+
 
 def envia_texto_sobek(request):
     request_body = json.loads(request.body)
@@ -95,6 +110,7 @@ class EnviaTexto(APIView):
         if serializer.is_valid():
             text = request.DATA['text']
             text = strip_escape(text)
+            text = encode_string(text)
             
             if 'mode' not in request.DATA:
                 request.DATA['mode'] = 'default'
@@ -103,32 +119,28 @@ class EnviaTexto(APIView):
             response_data = {}
             
             
-            if mode != 'google':
+            if mode == 'sobek':
+                sobek_output = executa_sobek(text)
+                
+                response_data['sobek_output'] = decode_string(sobek_output).split()
+            elif mode == 'google':
+                search_input = text
+                
+                results_list = executa_xgoogle(search_input, request)
+                
+                response_data['results_list'] = results_list
+            else:
                 sobek_output = executa_sobek(text)
                 search_input = sobek_output
                 
+                results_list = executa_xgoogle(search_input, request)
+                
                 response_data['sobek_output'] = decode_string(sobek_output).split()
-            else:
-                search_input = encode_string(text)
-            
-            
-            if mode != 'sobek':
-                gs = GoogleSearchUserAgentCseSelenium(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
-                results = gs.get_results()
-                
-                results_list = []
-                for res in results:
-                    result_dict = OrderedDict()
-                    result_dict['title'] = res.title
-                    result_dict['url'] = res.url
-                    result_dict['snippet'] = res.desc
-                    results_list.append(result_dict)
-                
                 response_data['results_list'] = results_list
             
             
             if request.accepted_renderer.format == 'html':
-                text_hash = hashlib.sha224(encode_string(text)).hexdigest()
+                text_hash = hashlib.sha224(text).hexdigest()
                 
                 response_data['text_hash'] = text_hash
                 
