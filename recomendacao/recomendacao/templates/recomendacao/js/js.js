@@ -1,7 +1,5 @@
-$(document).ready(document_ready());
-
 // Ao carregar a página, realiza os seguintes procedimentos automaticamente:
-function document_ready() {
+$(document).ready(function() {
     $('#form-texto').submit(function(event) {
         //var text = $('#form-texto #id_text').val();
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
@@ -47,31 +45,32 @@ function document_ready() {
                 var sobek_output = convert_list_of_strings_to_string(response.sobek_output);
                 console.log('Saída do Sobek: %s', sobek_output);
                 
-                var words = '';
+                var results_container = $('#results-ajax');
+                var words_string = '';
                 var result = {};
+                var results_string = '';
                 
-                $('#results-ajax').html('');
+                results_container.html('');
                 
                 if (is_defined(response.sobek_output)) {
-                    $('#results-ajax').append('<div>');
                     for (word_index in response.sobek_output) {
-                        words += response.sobek_output[word_index] + ' ';
+                        words_string += response.sobek_output[word_index] + ' ';
                     }
-                    words = words.slice(0, -1);
-                    $('#results-ajax').append(words);
-                    $('#results-ajax').append('</div>');
+                    words_string = words_string.slice(0, -1);
+                    
+                    $('<div/>').html(words_string).appendTo(results_container);
                 }
                 
                 if (is_defined(response.results_list)) {
-                    $('#results-ajax').append('<div>');
                     for (result_index in response.results_list) {
                         result = response.results_list[result_index];
                         
-                        $('#results-ajax').append('<h3><a href=' + result.url + ' target="_blank">' + result.title + '</a></h3>');
-                        $('#results-ajax').append('<cite>' + result.url + '</cite><br />');
-                        $('#results-ajax').append(result.snippet);
+                        results_string += '<h3><a href=' + result.url + ' target="_blank">' + result.title + '</a></h3>';
+                        results_string += '<cite>' + result.url + '</cite><br />';
+                        results_string += result.snippet;
                     }
-                    $('#results-ajax').append('</div>');
+                    
+                    $('<div/>').html(results_string).appendTo(results_container);
                 }
             },
             beforeSend: function(jqXHR, settings) {
@@ -79,11 +78,11 @@ function document_ready() {
             }
         });
     });
-}
+});
 
 function append_hidden_inputs(form, data) {
     for (i in data) {
-        input = $('<input>').prop({'type': 'hidden', 'name': i}).val(data[i]);
+        input = $('<input/>').prop({'type': 'hidden', 'name': i}).val(data[i]);
         old_input = $(form).find('[name="' + i +'"]').first();
         input_exists = old_input.length;
         
