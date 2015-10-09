@@ -65,9 +65,10 @@ $(document).ready(function() {
                     for (result_index in response.results_list) {
                         result = response.results_list[result_index];
                         
-                        results_string += '<h3><a href=' + result.url + ' target="_blank">' + result.title + '</a></h3>';
-                        results_string += '<cite>' + result.url + '</cite><br />';
-                        results_string += result.snippet;
+                        results_string += '\
+                            <h3><a href="' + result.url + '" target="_blank">' + result.title + '</a></h3>\
+                            <cite>' + result.url + '</cite><br />' +
+                            result.snippet;
                     }
                     
                     $('<div/>').html(results_string).appendTo(results_container);
