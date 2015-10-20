@@ -22,9 +22,11 @@
     
     <div>
         {% for result in results_list %}
-            <h3><a href='{{ result.url }}' target='_blank'>{{ result.title }}</a></h3>
-            <cite>{{ result.url }}</cite><br />
-            {{ result.snippet }}
+        <div>
+            <div><a href='{{ result.url }}' target='_blank'>{{ result.title }}</a></div>
+            <div><cite>{{ result.url }}</cite></div>
+            <div>{{ result.snippet }}</div>
+        </div>
         {% endfor %}
     </div>
 </div>

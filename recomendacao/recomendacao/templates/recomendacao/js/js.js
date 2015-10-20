@@ -62,13 +62,30 @@ $(document).ready(function() {
                 }
                 
                 if (is_defined(response.results_list)) {
+                    /*
                     for (result_index in response.results_list) {
                         result = response.results_list[result_index];
                         
-                        results_string += '\
-                            <h3><a href="' + result.url + '" target="_blank">' + result.title + '</a></h3>\
-                            <cite>' + result.url + '</cite><br />' +
-                            result.snippet;
+                        results_string += '' + 
+                        '<div>' + 
+                            '<div><a href="' + result.url + '" target="_blank">' + result.title + '</a></div>' + 
+                            '<div><cite>' + result.url + '</cite></div>' + 
+                            '<div>' + result.snippet + '</div>' + 
+                        '</div>';
+                    }
+                    
+                    results_string += '<br/>';
+                    
+                    */
+                    for (result_index in response.results_list) {
+                        result = response.results_list[result_index];
+                        
+                        results_string += '' + 
+                        '<div>' + 
+                            '<div><a href="' + result.url + '" target="_blank">' + result.title_markup + '</a></div>' + 
+                            '<div><cite>' + result.url_markup + '</cite></div>' + 
+                            '<div>' + result.snippet_markup + '</div>' + 
+                        '</div>';
                     }
                     
                     $('<div/>').html(results_string).appendTo(results_container);

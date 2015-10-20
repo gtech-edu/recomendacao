@@ -9,6 +9,22 @@ from xgoogle.browser import BrowserError, BROWSERS
 from xgoogle.BeautifulSoup import BeautifulSoup
 
 
+class SearchResult(object):
+    def __init__(self, title, url, desc):
+        self.title = title
+        self.url = url
+        self.desc = desc
+
+    def __str__(self):
+        return 'Google Search Result: "%s"' % self.title
+
+class SearchResultMarkup(SearchResult):
+    def __init__(self, title, title_markup, url, url_markup, desc, desc_markup):
+        super(SearchResultMarkup, self).__init__(title, url, desc)
+        self.title_markup = title_markup
+        self.url_markup = url_markup
+        self.desc_markup = desc_markup
+
 class GoogleSearchUserAgent(GoogleSearch):
     def __init__(self, query, user_agent=BROWSERS[0], debug=False, **kwargs):
         super(GoogleSearchUserAgent, self).__init__(query, **kwargs)
@@ -98,6 +114,55 @@ class GoogleSearchUserAgentCseSelenium(GoogleSearchUserAgentCse):
         
         desc = ''.join(desc_span.findAll(text=True))
         return self._html_unescape(desc)
+
+class GoogleSearchUserAgentCseSeleniumMarkup(GoogleSearchUserAgentCseSelenium):
+    def _extract_result(self, result):
+        title, url = self._extract_title_url(result)
+        title_markup, url_markup = self._extract_title_url_markup(result)
+        desc = self._extract_description(result)
+        desc_markup = self._extract_description_markup(result)
+        if not title or not url or not desc:
+            return None
+        return SearchResultMarkup(title, title_markup, url, url_markup, desc, desc_markup)
+    
+    def _extract_title_url_markup(self, result):
+        #title_a = result.find('a', {'class': re.compile(r'\bl\b')})
+        title_a = result.find('a')
+        if not title_a:
+            self._maybe_raise(ParseError, "Title tag in Google search result was not found", result)
+            return None, None
+        
+        title = title_a.renderContents(encoding=None)
+        title = self._html_unescape(title)
+        
+        url_div = result.find('div', {'class': 'gs-bidi-start-align gs-visibleUrl gs-visibleUrl-long'})
+        
+        url = url_div.renderContents(encoding=None)
+        match = re.match(r'/url\?q=(http[^&]+)&', url)
+        if match:
+            url = urllib.unquote(match.group(1))
+        
+        return title, url
+    
+    def _extract_description_markup(self, result):
+        desc_span = result.find('div', {'class': 'gs-bidi-start-align gs-snippet'})
+        if not desc_span:
+            self._maybe_raise(ParseError, "Description tag in Google search result was not found", result)
+            return None
+        
+        desc = desc_span.renderContents(encoding=None)
+        return self._html_unescape(desc)
+
+class GoogleSearchUserAgentCseSeleniumMarkupImages(GoogleSearchUserAgentCseSeleniumMarkup):
+    def _extract_description_markup(self, result):
+        desc_span = result.find('table', {'class': 'gsc-table-result'})
+        if not desc_span:
+            self._maybe_raise(ParseError, "Description tag in Google search result was not found", result)
+            return None
+        
+        desc = desc_span.renderContents(encoding=None)
+        return self._html_unescape(desc)
+
 
 class GoogleSearchUserAgentHtml(GoogleSearchUserAgent):
     def _extract_title_url(self, result):

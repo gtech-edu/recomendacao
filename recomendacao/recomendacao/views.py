@@ -21,7 +21,7 @@ from collections import OrderedDict
 
 from recomendacao.forms import FormText
 from recomendacao.serializers import SerializerText
-from recomendacao.search import GoogleSearchUserAgentCseSelenium
+from recomendacao.search import GoogleSearchUserAgentCseSeleniumMarkup
 
 from recomendacao.settings import BASE_DIR
 from recomendacao.const import APP_NAME, ENCODING, CSE_ID
@@ -69,18 +69,26 @@ def executa_sobek(text):
         sobek_command = ['java', '-Dfile.encoding=' + ENCODING, '-jar', encode_string(sobek_path), '-b', '-m', '1', '-t', '"' + encode_string(text) + '"']
         sobek_output = subprocess.check_output(sobek_command)
     
+    sobek_output = sobek_output.replace('\n', ' ')
+    
     return sobek_output
 
 def executa_xgoogle(search_input, request):
-    gs = GoogleSearchUserAgentCseSelenium(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+    gs = GoogleSearchUserAgentCseSeleniumMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
     results = gs.get_results()
     
     results_list = []
     for res in results:
         result_dict = OrderedDict()
+        
         result_dict['title'] = res.title
         result_dict['url'] = res.url
         result_dict['snippet'] = res.desc
+        
+        result_dict['title_markup'] = res.title_markup
+        result_dict['url_markup'] = res.url_markup
+        result_dict['snippet_markup'] = res.desc_markup
+        
         results_list.append(result_dict)
     
     return results_list
