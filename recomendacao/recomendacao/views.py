@@ -18,6 +18,7 @@ import json
 import urllib
 import hashlib
 from collections import OrderedDict
+from time import sleep
 
 from recomendacao.forms import FormText
 from recomendacao.serializers import SerializerText
@@ -60,20 +61,27 @@ class ViewBusca(View):
 
 def executa_sobek(text):
     sobek_path = os.path.join(BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
-    text = urllib.quote(text)
     
     try:
-        sobek_command = ['java', '-Dfile.encoding=' + ENCODING, '-jar', encode_string(sobek_path), '-b', '-t', '"' + encode_string(text) + '"']
+        quoted_text = urllib.quote(text)
+        sobek_command = ['java', '-Dfile.encoding=' + ENCODING, '-jar', encode_string(sobek_path), '-b', '-t', '"' + encode_string(quoted_text) + '"']
         sobek_output = subprocess.check_output(sobek_command)
     except subprocess.CalledProcessError:
-        sobek_command = ['java', '-Dfile.encoding=' + ENCODING, '-jar', encode_string(sobek_path), '-b', '-m', '1', '-t', '"' + encode_string(text) + '"']
+        text += ' ' + text
+        
+        quoted_text = urllib.quote(text)
+        sobek_command = ['java', '-Dfile.encoding=' + ENCODING, '-jar', encode_string(sobek_path), '-b', '-t', '"' + encode_string(quoted_text) + '"']
         sobek_output = subprocess.check_output(sobek_command)
     
     sobek_output = sobek_output.replace('\n', ' ')
     
+    if len(sobek_output.split()) > 30:
+        sobek_output = executa_sobek(sobek_output)
+    
     return sobek_output
 
 def executa_xgoogle(search_input, request):
+    sleep(1)
     gs = GoogleSearchUserAgentCseSeleniumMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
     results = gs.get_results()
     

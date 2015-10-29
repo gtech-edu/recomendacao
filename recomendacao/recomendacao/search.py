@@ -39,7 +39,7 @@ class GoogleSearchUserAgentCse(GoogleSearchUserAgent):
     def __init__(self, query, cx=None, **kwargs):
         super(GoogleSearchUserAgentCse, self).__init__(query, **kwargs)
         self._cx = cx
-        self._nojs = '0' # The nojs parameter is no longer supported
+        #self._nojs = '0' # The nojs parameter is no longer supported
     
     def _get_results_page(self):
         if self._page == 0:
@@ -66,7 +66,7 @@ class GoogleSearchUserAgentCse(GoogleSearchUserAgent):
             safe_url.extend(["&as_filetype=", self._filetype])
         if self._cx:
             safe_url.extend(["&cx=", self._cx])
-            safe_url.extend(["&nojs=", self._nojs])
+            #safe_url.extend(["&nojs=", self._nojs]) # The nojs parameter is no longer supported
         
         safe_url = "".join(safe_url)
         self._last_search_url = safe_url
