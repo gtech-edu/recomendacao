@@ -81,7 +81,6 @@ def executa_sobek(text):
     return sobek_output
 
 def executa_xgoogle(search_input, request):
-    sleep(1)
     gs = GoogleSearchUserAgentCseSeleniumMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
     results = gs.get_results()
     

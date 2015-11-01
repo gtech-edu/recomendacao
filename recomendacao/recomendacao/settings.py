@@ -96,6 +96,18 @@ DATABASES = {
 }
 
 
+# Cache
+# https://docs.djangoproject.com/en/1.8/topics/cache/
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache_table',
+        'TIMEOUT': None,
+    }
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
