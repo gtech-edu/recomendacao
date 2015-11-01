@@ -31,10 +31,10 @@ class GoogleSearchUserAgent(GoogleSearch):
         self.browser = BrowserSelenium(user_agent=user_agent, debug=debug)
 
 class GoogleSearchUserAgentCse(GoogleSearchUserAgent):
-    SEARCH_URL_0 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&btnG=Google+Search"
-    NEXT_PAGE_0 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&start=%(start)d"
-    SEARCH_URL_1 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&num=%(num)d&btnG=Google+Search"
-    NEXT_PAGE_1 = "http://www.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&num=%(num)d&start=%(start)d"
+    SEARCH_URL_0 = "http://cse.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&btnG=Google+Search"
+    NEXT_PAGE_0 = "http://cse.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&start=%(start)d"
+    SEARCH_URL_1 = "http://cse.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&num=%(num)d&btnG=Google+Search"
+    NEXT_PAGE_1 = "http://cse.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&num=%(num)d&start=%(start)d"
     
     def __init__(self, query, cx=None, **kwargs):
         super(GoogleSearchUserAgentCse, self).__init__(query, **kwargs)
