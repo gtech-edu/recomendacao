@@ -22,7 +22,7 @@ from time import sleep
 
 from recomendacao.forms import FormText
 from recomendacao.serializers import SerializerText
-from recomendacao.search import GoogleSearchUserAgentCseSeleniumMarkup
+from recomendacao.search import GoogleSearchUserAgentCse, GoogleSearchUserAgentCseMarkup
 
 from recomendacao.settings import BASE_DIR
 from recomendacao.const import APP_NAME, ENCODING, CSE_ID
@@ -81,7 +81,7 @@ def executa_sobek(text):
     return sobek_output
 
 def executa_xgoogle(search_input, request):
-    gs = GoogleSearchUserAgentCseSeleniumMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+    gs = GoogleSearchUserAgentCseMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
     results = gs.get_results()
     
     results_list = []
@@ -177,7 +177,7 @@ class EnviaTextoV2(APIView):
         return sobek_output
     
     def run_xgoogle(self, search_input, request):
-        gs = GoogleSearchUserAgentCseSeleniumMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+        gs = GoogleSearchUserAgentCse(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
         results = gs.get_results()
         
         results_list = []
@@ -271,7 +271,7 @@ class EnviaTextoV3(APIView):
         return sobek_output
     
     def run_xgoogle(self, search_input, request):
-        gs = GoogleSearchUserAgentCseSeleniumMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+        gs = GoogleSearchUserAgentCseMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
         results = gs.get_results()
         
         results_list = []

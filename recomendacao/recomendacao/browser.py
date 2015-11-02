@@ -3,6 +3,7 @@
 import socket
 import urllib
 import urllib2
+import requests
 import os
 from selenium import webdriver
 
@@ -12,6 +13,29 @@ from django.core.cache import caches
 
 from recomendacao import config
 
+
+class BrowserRequests(Browser):
+    def get_page(self, url, data=None):
+        #handlers = [PoolHTTPHandler]
+        #opener = urllib2.build_opener(*handlers)
+        #if data: data = urllib.urlencode(data)
+        #request = urllib2.Request(url, data, self.headers)
+        try:
+            #response = opener.open(request)
+            #return response.read()
+            
+            response = requests.get(url)
+            return response.text
+        except (urllib2.HTTPError, urllib2.URLError), e:
+            raise BrowserError(url, str(e))
+        except (socket.error, socket.sslerror), msg:
+            raise BrowserError(url, msg)
+        except socket.timeout, e:
+            raise BrowserError(url, "timeout")
+        except KeyboardInterrupt:
+            raise
+        except:
+            raise BrowserError(url, "unknown error")
 
 class BrowserSelenium(Browser):
     def get_page(self, url, data=None):
