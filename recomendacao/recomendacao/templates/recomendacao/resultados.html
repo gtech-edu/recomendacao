@@ -1,13 +1,14 @@
 {% extends 'recomendacao/base.html' %}
 
-{% block content %}
-
+{% block extra_css %}
 <style>
     #results-files {
         text-align: center;
     }
 </style>
+{% endblock extra_css %}
 
+{% block content %}
 <div id='results'>
     <div id='results-files'>
         <a href='{{ FILES_URL }}{{ text_hash }}.xml' target='_blank'>XML</a>
@@ -30,7 +31,9 @@
         {% endfor %}
     </div>
 </div>
+{% endblock content %}
 
+{% block extra_js %}
 <script>
     var sobek_output = '';
     
@@ -41,5 +44,4 @@
     
     console.log('Saída do Sobek: %s', sobek_output);
 </script>
-
-{% endblock content %}
+{% endblock extra_js %}

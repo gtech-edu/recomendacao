@@ -1,14 +1,14 @@
 {% extends 'recomendacao/base.html' %}
 
-{% block content %}
-
+{% block extra_css %}
 <style type="text/css">
     body {
         width: 1200px;
     }
-}
 </style>
+{% endblock extra_css %}
 
+{% block content %}
 <div id='form-search-box'>
     <form id='form-texto' method='post'>
         {% csrf_token %}
@@ -25,5 +25,8 @@
         <div id="results"></div>
     </div>
 </div>
-
 {% endblock content %}
+
+{% block extra_js %}
+<script src='{% url "js-v1" %}'></script>
+{% endblock extra_js %}

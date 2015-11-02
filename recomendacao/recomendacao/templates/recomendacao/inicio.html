@@ -1,13 +1,14 @@
 {% extends 'recomendacao/base.html' %}
 
-{% block content %}
-
+{% block extra_css %}
 <style>
     body {
         text-align: center;
     }
 </style>
+{% endblock extra_css %}
 
+{% block content %}
 <h1> Web Service de Recomendação <br/> GTech-Edu/CoPPla </h1>
 <div>
     <a href='{% url "v1" %}'>Versão 1</a>
@@ -15,5 +16,7 @@
 <div>
     <a href='{% url "v2" %}'>Versão 2</a>
 </div>
-
+<div>
+    <a href='{% url "v3" %}'>Versão 3</a>
+</div>
 {% endblock content %}

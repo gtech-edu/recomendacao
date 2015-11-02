@@ -1,0 +1,23 @@
+{% extends 'recomendacao/base.html' %}
+
+{% block content %}
+<div id='form-search-box'>
+    <form id='form-texto-post' method='post'>
+        {% csrf_token %}
+        <div>
+            {{ form.text }}
+        </div>
+        
+        <div>
+            <input id='btn-enviar-texto-post' type='submit' value='Enviar texto via POST'>
+            <input id='btn-enviar-texto-ajax' type='button' value='Enviar texto via POST (Ajax)'>
+        </div>
+    </form>
+</div>
+
+<div id='results-ajax'></div>
+{% endblock content %}
+
+{% block extra_js %}
+<script src='{% url "js-v2" %}'></script>
+{% endblock extra_js %}

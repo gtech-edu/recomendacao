@@ -80,3 +80,36 @@ function formReturnKey(event, input_text_types) {
         }
     }
 }
+
+function append_hidden_inputs(form, data) {
+    for (i in data) {
+        input = $('<input/>').prop({'type': 'hidden', 'name': i}).val(data[i]);
+        old_input = $(form).find('[name="' + i +'"]').first();
+        input_exists = old_input.length;
+        
+        if (!input_exists) {
+            $(form).append(input);
+        }
+        else {
+            old_input.replaceWith(input);
+        }
+    }
+}
+
+function convert_list_of_strings_to_string(list) {
+    var output_string = '';
+    for (string_index in list) {
+        output_string += list[string_index] + ',';
+    }
+    output_string = output_string.slice(0, -1);
+    return output_string;
+}
+
+function is_defined(variable) {
+    if (typeof variable !== 'undefined') {
+        return true; // variable is defined
+    }
+    else {
+        return false; // variable is undefined
+    }
+}

@@ -1,7 +1,6 @@
 {% extends 'recomendacao/base.html' %}
 
 {% block content %}
-
 <div id='form-search-box'>
     <form id='form-texto-post' method='post'>
         {% csrf_token %}
@@ -21,5 +20,8 @@
 </div>
 
 <div id='results-ajax'></div>
-
 {% endblock content %}
+
+{% block extra_js %}
+<script src='{% url "js-v3" %}'></script>
+{% endblock extra_js %}
