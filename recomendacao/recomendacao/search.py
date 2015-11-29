@@ -124,6 +124,9 @@ class GoogleSearchUserAgentCseMarkup(GoogleSearchUserAgentCse):
         if match:
             url = urllib.unquote(match.group(1))
         
+        if not '://' in url:
+            url = 'http://' + url
+        
         return title, url
     
     def _extract_description_markup(self, result):
@@ -133,7 +136,7 @@ class GoogleSearchUserAgentCseMarkup(GoogleSearchUserAgentCse):
             return None
         
         desc = desc_span.renderContents(encoding=None).replace('<br />', '')
-        return self._html_unescape(desc)
+        return desc
 
 
 class GoogleSearchUserAgentCseSelenium(GoogleSearchUserAgentCse):
