@@ -8,10 +8,6 @@
 </style>
 {% endblock extra_css %}
 
-{% block extra_js %}
-<script type='text/javascript' defer='defer' src='{% url "js-v2" %}'></script>
-{% endblock extra_js %}
-
 {% block content %}
 <div id='form-search-box'>
     <form id='form-texto-post' method='post'>
@@ -30,3 +26,7 @@
 <br />
 <div id='results-ajax'></div>
 {% endblock content %}
+
+{% block extra_js %}
+<script type='text/javascript' src='{% url "js-v2" %}'></script>
+{% endblock extra_js %}
