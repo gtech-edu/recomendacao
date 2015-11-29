@@ -1,5 +1,5 @@
 // Ao carregar a página, realiza os seguintes procedimentos automaticamente:
-$(document).ready(function() {
+jQuery(document).ready(function($) {
     $('#form-texto').submit(function(event) {
         //var text = $('#form-texto #id_text').val();
         var text = tinyMCE.activeEditor.getContent({format : 'text'});

@@ -7,36 +7,38 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Título Geral</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-    <link href='{% static "recomendacao/css/recomendacao.css" %}' rel='stylesheet' />
+    
+    <link type='text/css' rel='stylesheet' href='{% static "recomendacao/css/recomendacao.css" %}' />
     {% block extra_css %}
     {% endblock extra_css %}
+    
+    
+    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+    <script type='text/javascript' defer='defer' src='{% static "recomendacao/js/jquery.serialize-object.compiled.js" %}'></script>
+    
+    <script type='text/javascript' defer='defer' src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+    <script type='text/javascript'>
+        jQuery(document).ready(function($) {
+            tinymce.init({
+                selector:'textarea',
+                language_url: '{% static "recomendacao/tinymce/langs/pt_BR.js" %}'
+            });
+        });
+    </script>
+    
+    <script type='text/javascript' defer='defer' src='{% url "js-aux" %}'></script>
+    {% block extra_js %}
+    {% endblock extra_js %}
 </head>
 
 <body>
     {% block content %}
     {% endblock content %}
-    
-    <div>
-        <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
-        <script src='{% static "recomendacao/js/jquery.serialize-object.compiled.js" %}'></script>
-        
-        <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
-        <script>
-            tinymce.init({
-                selector:'textarea',
-                language_url: '{% static "recomendacao/tinymce/langs/pt_BR.js" %}'
-            });
-        </script>
-        
-        <script src='{% url "js-aux" %}'></script>
-        {% block extra_js %}
-        {% endblock extra_js %}
-    </div>
 </body>
 </html>

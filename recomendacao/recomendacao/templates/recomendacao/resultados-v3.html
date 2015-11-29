@@ -1,0 +1,63 @@
+{% extends 'recomendacao/base.html' %}
+
+{% block extra_css %}
+<style type='text/css'>
+    #results-files {
+        text-align: center;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block extra_js %}
+<script type='text/javascript'>
+    jQuery(document).ready(function($) {
+        var sobek_output = '';
+        
+        {% for word in sobek_output %}
+            sobek_output += '{{ word }},';
+        {% endfor %}
+        sobek_output = sobek_output.slice(0, -1);
+        
+        console.log('Saída do Sobek: %s', sobek_output);
+    });
+</script>
+{% endblock extra_js %}
+
+{% block content %}
+<div id='results'>
+    <div id='results-files'>
+        <a href='{{ FILES_URL }}{{ text_hash }}.xml' target='_blank'>XML</a>
+        <a href='{{ FILES_URL }}{{ text_hash }}.json' target='_blank'>JSON</a>
+    </div>
+    
+    {% if sobek_output  %}
+    <br />
+    <div>
+        <strong>Termos extraídos pelo Sobek:</strong>
+        <div>
+        {% for word in sobek_output %}
+            {{ word }}
+        {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if results_list  %}
+    <br />
+    <div>
+        <strong>Resultado da recomendação:</strong>
+        <div>
+        {% autoescape off %}
+        {% for result in results_list %}
+        <div>
+            <div><a href='{{ result.url }}' target='_blank'>{{ result.title_markup }}</a></div>
+            <div><cite>{{ result.url_markup }}</cite></div>
+            <div>{{ result.snippet_markup }}</div>
+        </div>
+        {% endfor %}
+        {% endautoescape %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

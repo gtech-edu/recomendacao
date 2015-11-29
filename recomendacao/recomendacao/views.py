@@ -151,7 +151,7 @@ class EnviaTextoV2(APIView):
                 self.create_response_data_file(json_response_data, text_hash, JSONRenderer.format)
             
             
-            response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados.html'))
+            response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados-v2.html'))
             return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -245,7 +245,7 @@ class EnviaTextoV3(APIView):
                 self.create_response_data_file(json_response_data, text_hash, JSONRenderer.format)
             
             
-            response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados.html'))
+            response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados-v3.html'))
             return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

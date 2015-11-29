@@ -1,5 +1,17 @@
 {% extends 'recomendacao/base.html' %}
 
+{% block extra_css %}
+<style type='text/css'>
+    #results-files {
+        text-align: center;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block extra_js %}
+<script type='text/javascript' defer='defer' src='{% url "js-v3" %}'></script>
+{% endblock extra_js %}
+
 {% block content %}
 <div id='form-search-box'>
     <form id='form-texto-post' method='post'>
@@ -19,9 +31,6 @@
     </form>
 </div>
 
+<br />
 <div id='results-ajax'></div>
 {% endblock content %}
-
-{% block extra_js %}
-<script src='{% url "js-v3" %}'></script>
-{% endblock extra_js %}

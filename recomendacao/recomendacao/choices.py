@@ -10,9 +10,9 @@ def choices_none():
 
 def choices_mode():
     CHOICES_MODE = [
-        ['default', u'Padrão'],
-        ['sobek', u'Sobek'],
-        ['google', u'Google'],
+        ['default', u'Sobek+Google (Padrão)'],
+        ['sobek', u'Apenas Sobek'],
+        ['google', u'Apenas Google'],
     ]
     
     return CHOICES_MODE

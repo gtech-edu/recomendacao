@@ -1,5 +1,5 @@
 // Ao carregar a página, realiza os seguintes procedimentos automaticamente:
-$(document).ready(function() {
+jQuery(document).ready(function($) {
     $('#form-texto-post').submit(function(event) {
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
         var data = {text:text};
@@ -12,6 +12,21 @@ $(document).ready(function() {
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
         var mode = $('#id_mode').val();
         
+        $.ajax({
+            type: 'POST',
+            url: '{% url "post-v3" %}',
+            data: JSON.stringify({text: text, mode: mode}),
+            contentType: 'application/json',
+            dataType: 'html',
+            success: function(response) {
+                var results_html = $(response).filter('#results').html();
+                $('#results-ajax').html(results_html);
+            },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+            }
+        });
+        /*
         $.ajax({
             type: 'POST',
             url: '{% url "post-v3" %}',
@@ -34,11 +49,22 @@ $(document).ready(function() {
                         words_string += response.sobek_output[word_index] + ' ';
                     }
                     words_string = words_string.slice(0, -1);
-                    
-                    $('<div/>').html(words_string).appendTo(results_container);
+                    results_string += '' +
+                    '<br />' +
+                    '<div>' +
+                        '<strong>Termos extraídos pelo Sobek:</strong>' +
+                        '<div>' +
+                            words_string +
+                        '</div>' +
+                    '</div>';
                 }
                 
                 if (is_defined(response.results_list)) {
+                    results_string += '' +
+                    '<br />' +
+                    '<div>' +
+                        '<strong>Resultado da recomendação:</strong>' +
+                        '<div>';
                     for (result_index in response.results_list) {
                         result = response.results_list[result_index];
                         
@@ -49,13 +75,14 @@ $(document).ready(function() {
                             '<div>' + result.snippet_markup + '</div>' + 
                         '</div>';
                     }
-                    
-                    $('<div/>').html(results_string).appendTo(results_container);
+                    results_string += '</div></div>';
                 }
+                $('<div/>').html(results_string).appendTo(results_container);
             },
             beforeSend: function(jqXHR, settings) {
                 jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
             }
         });
+        */
     });
 });
