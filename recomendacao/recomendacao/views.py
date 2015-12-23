@@ -22,7 +22,7 @@ from time import sleep
 
 from recomendacao.forms import FormText
 from recomendacao.serializers import SerializerText
-from recomendacao.search import GoogleSearchUserAgentCse, GoogleSearchUserAgentCseMarkup
+from recomendacao.search import GoogleSearchCse, GoogleSearchCseMarkup, GoogleSearchCseSeleniumMarkupImg
 
 from recomendacao.settings import BASE_DIR
 from recomendacao.const import APP_NAME, ENCODING, CSE_ID
@@ -81,7 +81,7 @@ def executa_sobek(text):
     return sobek_output
 
 def executa_xgoogle(search_input, request):
-    gs = GoogleSearchUserAgentCseMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+    gs = GoogleSearchCseMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
     results = gs.get_results()
     
     results_list = []
@@ -177,7 +177,7 @@ class EnviaTextoV2(APIView):
         return sobek_output
     
     def run_xgoogle(self, search_input, request):
-        gs = GoogleSearchUserAgentCse(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+        gs = GoogleSearchCse(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
         results = gs.get_results()
         
         results_list = []
@@ -206,9 +206,8 @@ class EnviaTextoV3(APIView):
             text = strip_escape(text)
             text = encode_string(text)
             
-            if 'mode' not in request.DATA:
-                request.DATA['mode'] = 'default'
-            mode = request.DATA['mode']
+            mode = request.DATA.get('mode')
+            images = request.DATA.get('images')
             
             response_data = {}
             
@@ -220,14 +219,14 @@ class EnviaTextoV3(APIView):
             elif mode == 'google':
                 search_input = text
                 
-                results_list = self.run_xgoogle(search_input, request)
+                results_list = self.run_xgoogle(search_input, request, images)
                 
                 response_data['results_list'] = results_list
             else:
                 sobek_output = self.run_sobek(text)
                 search_input = sobek_output
                 
-                results_list = self.run_xgoogle(search_input, request)
+                results_list = self.run_xgoogle(search_input, request, images)
                 
                 response_data['sobek_output'] = decode_string(sobek_output).split()
                 response_data['results_list'] = results_list
@@ -270,8 +269,11 @@ class EnviaTextoV3(APIView):
         
         return sobek_output
     
-    def run_xgoogle(self, search_input, request):
-        gs = GoogleSearchUserAgentCseMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+    def run_xgoogle(self, search_input, request, images):
+        if not images:
+            gs = GoogleSearchCseMarkup(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
+        else:
+            gs = GoogleSearchCseSeleniumMarkupImg(search_input, user_agent=request.META['HTTP_USER_AGENT'], lang='pt-br', tld='com.br', cx=CSE_ID)
         results = gs.get_results()
         
         results_list = []
@@ -285,6 +287,8 @@ class EnviaTextoV3(APIView):
             result_dict['title_markup'] = res.title_markup
             result_dict['url_markup'] = res.url_markup
             result_dict['snippet_markup'] = res.desc_markup
+            
+            result_dict['img'] = getattr(res, 'img', None)
             
             results_list.append(result_dict)
         

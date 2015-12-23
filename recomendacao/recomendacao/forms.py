@@ -7,8 +7,9 @@ from recomendacao.choices import choices_mode
 
 class FormText(forms.Form):
     text = forms.CharField(widget=forms.Textarea,)
-    mode = forms.ChoiceField(choices=choices_mode())
+    mode = forms.ChoiceField(choices=choices_mode(), required=False)
+    images = forms.BooleanField(required=False)
     
     class Meta:
-        fields = ['text', 'mode']
+        fields = ['text', 'mode', 'images']
         localized_fields = '__all__'

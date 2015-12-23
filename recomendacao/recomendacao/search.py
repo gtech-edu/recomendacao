@@ -25,20 +25,25 @@ class SearchResultMarkup(SearchResult):
         self.url_markup = url_markup
         self.desc_markup = desc_markup
 
+class SearchResultMarkupImg(SearchResultMarkup):
+    def __init__(self, title, url, desc, title_markup, url_markup, desc_markup, img):
+        super(SearchResultMarkupImg, self).__init__(title, url, desc, title_markup, url_markup, desc_markup)
+        self.img = img
+
 
 class GoogleSearchUserAgent(GoogleSearch):
     def __init__(self, query, user_agent=BROWSERS[0], debug=False, **kwargs):
         super(GoogleSearchUserAgent, self).__init__(query, **kwargs)
         self.browser = BrowserRequests(user_agent=user_agent, debug=debug)
 
-class GoogleSearchUserAgentCse(GoogleSearchUserAgent):
+class GoogleSearchCse(GoogleSearchUserAgent):
     SEARCH_URL_0 = "http://cse.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&btnG=Google+Search"
     NEXT_PAGE_0 = "http://cse.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&start=%(start)d"
     SEARCH_URL_1 = "http://cse.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&num=%(num)d&btnG=Google+Search"
     NEXT_PAGE_1 = "http://cse.google.%(tld)s/cse?hl=%(lang)s&q=%(query)s&num=%(num)d&start=%(start)d"
     
     def __init__(self, query, cx=None, **kwargs):
-        super(GoogleSearchUserAgentCse, self).__init__(query, **kwargs)
+        super(GoogleSearchCse, self).__init__(query, **kwargs)
         self._cx = cx
         #self._nojs = '0' # The nojs parameter is no longer supported
     
@@ -97,7 +102,7 @@ class GoogleSearchUserAgentCse(GoogleSearchUserAgent):
         desc = ''.join(desc_span.findAll(text=True))
         return self._html_unescape(desc)
 
-class GoogleSearchUserAgentCseMarkup(GoogleSearchUserAgentCse):
+class GoogleSearchCseMarkup(GoogleSearchCse):
     def _extract_result(self, result):
         title, url = self._extract_title_url(result)
         title_markup, url_markup = self._extract_title_url_markup(result)
@@ -139,9 +144,9 @@ class GoogleSearchUserAgentCseMarkup(GoogleSearchUserAgentCse):
         return desc
 
 
-class GoogleSearchUserAgentCseSelenium(GoogleSearchUserAgentCse):
+class GoogleSearchCseSelenium(GoogleSearchCse):
     def __init__(self, query, user_agent=BROWSERS[0], debug=False, **kwargs):
-        super(GoogleSearchUserAgentCseSelenium, self).__init__(query, **kwargs)
+        super(GoogleSearchCseSelenium, self).__init__(query, **kwargs)
         self.browser = BrowserSelenium(user_agent=user_agent, debug=debug)
     
     def _extract_results(self, soup):
@@ -162,7 +167,7 @@ class GoogleSearchUserAgentCseSelenium(GoogleSearchUserAgentCse):
         desc = ''.join(desc_span.findAll(text=True))
         return self._html_unescape(desc)
 
-class GoogleSearchUserAgentCseSeleniumMarkup(GoogleSearchUserAgentCseSelenium):
+class GoogleSearchCseSeleniumMarkup(GoogleSearchCseSelenium):
     def _extract_result(self, result):
         title, url = self._extract_title_url(result)
         title_markup, url_markup = self._extract_title_url_markup(result)
@@ -189,6 +194,9 @@ class GoogleSearchUserAgentCseSeleniumMarkup(GoogleSearchUserAgentCseSelenium):
         if match:
             url = urllib.unquote(match.group(1))
         
+        if not '://' in url:
+            url = 'http://' + url
+        
         return title, url
     
     def _extract_description_markup(self, result):
@@ -197,10 +205,32 @@ class GoogleSearchUserAgentCseSeleniumMarkup(GoogleSearchUserAgentCseSelenium):
             self._maybe_raise(ParseError, "Description tag in Google search result was not found", result)
             return None
         
-        desc = desc_span.renderContents(encoding=None)
-        return self._html_unescape(desc)
+        desc = desc_span.renderContents(encoding=None).replace('<br />', '')
+        return desc
 
-class GoogleSearchUserAgentCseSeleniumMarkupImages(GoogleSearchUserAgentCseSeleniumMarkup):
+class GoogleSearchCseSeleniumMarkupImg(GoogleSearchCseSeleniumMarkup):
+    def _extract_result(self, result):
+        title, url = self._extract_title_url(result)
+        title_markup, url_markup = self._extract_title_url_markup(result)
+        desc = self._extract_description(result)
+        desc_markup = self._extract_description_markup(result)
+        img = self._extract_img(result)
+        if not title or not url or not desc:
+            return None
+        return SearchResultMarkupImg(title, url, desc, title_markup, url_markup, desc_markup, img)
+    
+    def _extract_img(self, result):
+        img_tag = result.find('img')
+        if not img_tag:
+            self._maybe_raise(ParseError, "Image tag in Google search result was not found", result)
+            return None
+        
+        #del img_tag['class'], img_tag['onload']
+        #img = unicode(img_tag)
+        img = img_tag['src']
+        return self._html_unescape(img)
+
+class GoogleSearchCseSeleniumMarkupTable(GoogleSearchCseSeleniumMarkup):
     def _extract_description_markup(self, result):
         desc_span = result.find('table', {'class': 'gsc-table-result'})
         if not desc_span:
@@ -211,7 +241,7 @@ class GoogleSearchUserAgentCseSeleniumMarkupImages(GoogleSearchUserAgentCseSelen
         return self._html_unescape(desc)
 
 
-class GoogleSearchUserAgentHtml(GoogleSearchUserAgent):
+class GoogleSearchHtml(GoogleSearchUserAgent):
     def _extract_title_url(self, result):
         title_h3 = result.find('h3', {'class': 'r'})
         title_a = result.find('a')
@@ -238,7 +268,7 @@ class GoogleSearchUserAgentHtml(GoogleSearchUserAgent):
         desc = unicode(desc_div)
         return self._html_unescape(desc)
 
-class GoogleSearchUserAgentText(GoogleSearchUserAgent):
+class GoogleSearchText(GoogleSearchUserAgent):
     def _extract_description(self, result):
         desc_span = result.find('span', {'class': 'st'})
         if not desc_span:

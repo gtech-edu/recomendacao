@@ -11,11 +11,12 @@ jQuery(document).ready(function($) {
     $('#btn-enviar-texto-ajax').click(function(event) {
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
         var mode = $('#id_mode').val();
+        var images = $('#id_images').prop('checked');
         
         $.ajax({
             type: 'POST',
             url: '{% url "post-v3" %}',
-            data: JSON.stringify({text: text, mode: mode}),
+            data: JSON.stringify({text: text, mode: mode, images: images}),
             contentType: 'application/json',
             dataType: 'html',
             success: function(response) {

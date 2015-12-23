@@ -113,3 +113,11 @@ function is_defined(variable) {
         return false; // variable is undefined
     }
 }
+
+function is_substring_of_string(substring, string) {
+    return string.indexOf(substring) > -1;
+}
+
+function is_element_of_array(element, array) {
+    return array.indexOf(element) > -1;
+}
