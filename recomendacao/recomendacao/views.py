@@ -288,7 +288,8 @@ class EnviaTextoV3(APIView):
             result_dict['url_markup'] = res.url_markup
             result_dict['snippet_markup'] = res.desc_markup
             
-            result_dict['img'] = getattr(res, 'img', None)
+            if images:
+                result_dict['img'] = getattr(res, 'img', None)
             
             results_list.append(result_dict)
         
