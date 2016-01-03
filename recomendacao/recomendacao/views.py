@@ -25,7 +25,7 @@ from recomendacao.serializers import SerializerText
 from recomendacao.search import GoogleSearchCse, GoogleSearchCseMarkup, GoogleSearchCseSeleniumMarkupImg
 
 from recomendacao.settings import BASE_DIR
-from recomendacao.const import APP_NAME, ENCODING, CSE_ID
+from recomendacao.const import APP_NAME, ENCODING, CSE_ID, MAX_SIZE_SOBEK_OUTPUT
 
 
 def strip_escape(text):
@@ -131,6 +131,9 @@ class EnviaTextoV2(APIView):
             
             
             sobek_output = self.run_sobek(text)
+            while len(sobek_output.split()) > MAX_SIZE_SOBEK_OUTPUT:
+                sobek_output = self.run_sobek(sobek_output)
+            
             search_input = sobek_output
             
             results_list = self.run_xgoogle(search_input, request)
@@ -170,9 +173,6 @@ class EnviaTextoV2(APIView):
             sobek_output = subprocess.check_output(sobek_command)
         
         sobek_output = sobek_output.replace('\n', ' ')
-        
-        if len(sobek_output.split()) > 30:
-            sobek_output = self.run_sobek(sobek_output)
         
         return sobek_output
     
@@ -214,6 +214,8 @@ class EnviaTextoV3(APIView):
             
             if mode == 'sobek':
                 sobek_output = self.run_sobek(text)
+                while len(sobek_output.split()) > MAX_SIZE_SOBEK_OUTPUT:
+                    sobek_output = self.run_sobek(sobek_output)
                 
                 response_data['sobek_output'] = decode_string(sobek_output).split()
             elif mode == 'google':
@@ -224,6 +226,9 @@ class EnviaTextoV3(APIView):
                 response_data['results_list'] = results_list
             else:
                 sobek_output = self.run_sobek(text)
+                while len(sobek_output.split()) > MAX_SIZE_SOBEK_OUTPUT:
+                    sobek_output = self.run_sobek(sobek_output)
+                
                 search_input = sobek_output
                 
                 results_list = self.run_xgoogle(search_input, request, images)
@@ -263,9 +268,6 @@ class EnviaTextoV3(APIView):
             sobek_output = subprocess.check_output(sobek_command)
         
         sobek_output = sobek_output.replace('\n', ' ')
-        
-        if len(sobek_output.split()) > 30:
-            sobek_output = self.run_sobek(sobek_output)
         
         return sobek_output
     
