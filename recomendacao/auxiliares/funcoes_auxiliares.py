@@ -1,7 +1,10 @@
 #coding: utf-8
 
+import os
+import errno
 import re
 from HTMLParser import HTMLParser as hp
+
 
 def is_float(string):
     try:
@@ -10,6 +13,13 @@ def is_float(string):
         return False
     else:
         return True
+
+def make_sure_path_exists(path):
+    try:
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST or not os.path.isdir(path):
+            raise
 
 def request_referer(request):
     referer = request.META.get('HTTP_REFERER')

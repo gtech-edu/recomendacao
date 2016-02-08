@@ -43,7 +43,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'corsheaders',
     
-    APP_NAME,
+    APP_NAME + u'.apps.RecomendacaoConteudoAppConfig',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -127,16 +127,17 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+STATIC_URL = '/static/'
+
+FILES_ROOT = os.path.join(BASE_DIR, 'files')
+
+FILES_URL = '/files/'
+
 if not DEBUG:
     STATIC_URL = '/' + APP_NAME + '/static/'
-else:
-    STATIC_URL = '/static/'
-
 
 if not DEBUG:
     FILES_URL = '/' + APP_NAME + '/files/'
-else:
-    FILES_URL = '/files/'
 
 
 REST_FRAMEWORK = {

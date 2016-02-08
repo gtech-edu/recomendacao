@@ -23,8 +23,9 @@ from time import sleep
 from recomendacao.forms import FormText
 from recomendacao.serializers import SerializerText
 from recomendacao.search import GoogleSearchCse, GoogleSearchCseMarkup, GoogleSearchCseSeleniumMarkupImg
+from auxiliares import funcoes_auxiliares as aux
 
-from recomendacao.settings import BASE_DIR
+from recomendacao.settings import BASE_DIR, FILES_ROOT
 from recomendacao.const import APP_NAME, ENCODING, CSE_ID, MAX_SIZE_SOBEK_OUTPUT
 
 
@@ -194,7 +195,10 @@ class EnviaTextoV2(APIView):
     
     def create_response_data_file(self, response_data, text_hash, file_format):
         filename = text_hash + '.' + file_format
-        with open(os.path.join(BASE_DIR, 'files', filename), 'wb') as response_data_file:
+        
+        aux.make_sure_path_exists(FILES_ROOT)
+        
+        with open(os.path.join(FILES_ROOT, filename), 'wb') as response_data_file:
             response_data_file.write(response_data)
             response_data_file.close()
 
@@ -299,6 +303,9 @@ class EnviaTextoV3(APIView):
     
     def create_response_data_file(self, response_data, text_hash, file_format):
         filename = text_hash + '.' + file_format
-        with open(os.path.join(BASE_DIR, 'files', filename), 'wb') as response_data_file:
+        
+        aux.make_sure_path_exists(FILES_ROOT)
+        
+        with open(os.path.join(FILES_ROOT, filename), 'wb') as response_data_file:
             response_data_file.write(response_data)
             response_data_file.close()

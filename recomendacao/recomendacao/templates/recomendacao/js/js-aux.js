@@ -121,3 +121,7 @@ function is_substring_of_string(substring, string) {
 function is_element_of_array(element, array) {
     return array.indexOf(element) > -1;
 }
+
+function filter_unique (elem, pos, arr) {
+    return arr.indexOf(elem) == pos;
+}
