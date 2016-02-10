@@ -6,10 +6,12 @@ a2ensite site.conf
 python manage.py migrate                  # Apply database migrations
 python manage.py collectstatic --noinput  # Collect static files
 
+chown www-data:www-data ${DOCKYARD_SRVPROJ}
+
 # Prepare log files and start outputting logs to stdout
-touch /srv/logs/apache.log
-touch /srv/logs/access.log
-tail -n 0 -f /srv/logs/*.log &
+touch ${DOCKYARD_SRVHOME}/logs/apache.log
+touch ${DOCKYARD_SRVHOME}/logs/access.log
+tail -n 0 -f ${DOCKYARD_SRVHOME}/logs/*.log &
 
 # Start Apache process
 echo Starting Apache...
