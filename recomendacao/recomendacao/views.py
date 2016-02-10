@@ -25,7 +25,7 @@ from recomendacao.serializers import SerializerText
 from recomendacao.search import GoogleSearchCse, GoogleSearchCseMarkup, GoogleSearchCseSeleniumMarkupImg
 from auxiliares import funcoes_auxiliares as aux
 
-from recomendacao.settings import BASE_DIR, FILES_ROOT
+from django.conf import settings
 from recomendacao.const import APP_NAME, ENCODING, CSE_ID, MAX_SIZE_SOBEK_OUTPUT
 
 
@@ -61,7 +61,7 @@ class ViewBusca(View):
         return render(request, self.template_name, context)
 
 def executa_sobek(text):
-    sobek_path = os.path.join(BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
+    sobek_path = os.path.join(settings.BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
     
     try:
         quoted_text = urllib.quote(text)
@@ -160,7 +160,7 @@ class EnviaTextoV2(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def run_sobek(self, text):
-        sobek_path = os.path.join(BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
+        sobek_path = os.path.join(settings.BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
         
         try:
             quoted_text = urllib.quote(text)
@@ -196,9 +196,9 @@ class EnviaTextoV2(APIView):
     def create_response_data_file(self, response_data, text_hash, file_format):
         filename = text_hash + '.' + file_format
         
-        aux.make_sure_path_exists(FILES_ROOT)
+        aux.make_sure_path_exists(settings.FILES_ROOT)
         
-        with open(os.path.join(FILES_ROOT, filename), 'wb') as response_data_file:
+        with open(os.path.join(settings.FILES_ROOT, filename), 'wb') as response_data_file:
             response_data_file.write(response_data)
             response_data_file.close()
 
@@ -258,7 +258,7 @@ class EnviaTextoV3(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def run_sobek(self, text):
-        sobek_path = os.path.join(BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
+        sobek_path = os.path.join(settings.BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
         
         try:
             quoted_text = urllib.quote(text)
@@ -304,8 +304,8 @@ class EnviaTextoV3(APIView):
     def create_response_data_file(self, response_data, text_hash, file_format):
         filename = text_hash + '.' + file_format
         
-        aux.make_sure_path_exists(FILES_ROOT)
+        aux.make_sure_path_exists(settings.FILES_ROOT)
         
-        with open(os.path.join(FILES_ROOT, filename), 'wb') as response_data_file:
+        with open(os.path.join(settings.FILES_ROOT, filename), 'wb') as response_data_file:
             response_data_file.write(response_data)
             response_data_file.close()

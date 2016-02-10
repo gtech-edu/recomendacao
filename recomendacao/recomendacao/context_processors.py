@@ -1,4 +1,4 @@
-from recomendacao.settings import FILES_URL
+from django.conf import settings
 
 
 def full_absolute_urls(request):
@@ -12,6 +12,6 @@ def full_absolute_urls(request):
 
 def settings(request):
     context = {
-        'FILES_URL': FILES_URL,
+        'FILES_URL': settings.FILES_URL,
     }
     return context
