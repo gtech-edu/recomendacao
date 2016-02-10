@@ -10,7 +10,7 @@ def full_absolute_urls(request):
     }
     return context
 
-def settings(request):
+def extra_settings(request):
     context = {
         'FILES_URL': settings.FILES_URL,
     }

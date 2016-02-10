@@ -76,7 +76,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 APP_NAME + '.context_processors.full_absolute_urls',
-                APP_NAME + '.context_processors.settings',
+                APP_NAME + '.context_processors.extra_settings',
             ],
         },
     },
