@@ -15,4 +15,4 @@ tail -n 0 -f ${DOCKYARD_SRVHOME}/logs/*.log &
 
 # Start Apache process
 echo Starting Apache...
-apache2ctl -D FOREGROUND
+exec apache2ctl -D FOREGROUND

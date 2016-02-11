@@ -61,4 +61,3 @@ EXPOSE 80
 # Copy entrypoint script into the image
 WORKDIR ${DOCKYARD_SRVPROJ}
 COPY ./docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
