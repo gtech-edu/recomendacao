@@ -2,10 +2,10 @@
 
 
 # Fill the settings below with the correct values
-# and copy this file to "settings_secret.py"
+# and save this file as "settings_secret.py"
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'unique random string'
+SECRET_KEY = '' # This should be set to a unique, unpredictable value
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.example.com'
