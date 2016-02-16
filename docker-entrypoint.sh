@@ -6,7 +6,7 @@ a2ensite site.conf
 python manage.py migrate                  # Apply database migrations
 python manage.py collectstatic --noinput  # Collect static files
 
-chown www-data:www-data ${DOCKYARD_SRVPROJ}
+chown -R www-data:www-data ${DOCKYARD_SRVPROJ}
 
 # Prepare log files and start outputting logs to stdout
 touch ${DOCKYARD_SRVHOME}/logs/apache.log
