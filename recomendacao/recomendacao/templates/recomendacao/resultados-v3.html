@@ -37,7 +37,12 @@
         <div>
             <div><a href='{{ result.url }}' target='_blank'>{{ result.title_markup }}</a></div>
             <div><cite>{{ result.url_markup }}</cite></div>
-            <div><img src={{ result.img }} />{{ result.snippet_markup }}</div>
+            <div>
+                {% if result.img %}
+                <img src='{{ result.img }}' />
+                {% endif %}
+                {{ result.snippet_markup }}
+            </div>
         </div>
         {% endfor %}
         {% endautoescape %}
