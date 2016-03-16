@@ -122,9 +122,9 @@ def envia_texto_sobek(request):
 
 class EnviaTextoV2(APIView):
     def post(self, request, format=None):
-        serializer = SerializerText(data=request.DATA)
+        serializer = SerializerText(data=request.data)
         if serializer.is_valid():
-            text = request.DATA['text']
+            text = request.data['text']
             text = strip_escape(text)
             text = encode_string(text)
             
@@ -204,14 +204,14 @@ class EnviaTextoV2(APIView):
 
 class EnviaTextoV3(APIView):
     def post(self, request, format=None):
-        serializer = SerializerText(data=request.DATA)
+        serializer = SerializerText(data=request.data)
         if serializer.is_valid():
-            text = request.DATA['text']
+            text = request.data['text']
             text = strip_escape(text)
             text = encode_string(text)
             
-            mode = request.DATA.get('mode')
-            images = request.DATA.get('images')
+            mode = request.data.get('mode')
+            images = request.data.get('images')
             
             response_data = {}
             
@@ -255,7 +255,7 @@ class EnviaTextoV3(APIView):
             
             response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados-v3.html'))
             return response
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, exception=True)
     
     def run_sobek(self, text):
         sobek_path = os.path.join(settings.BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
