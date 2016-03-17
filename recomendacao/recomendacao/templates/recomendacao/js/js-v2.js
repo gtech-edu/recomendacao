@@ -1,17 +1,20 @@
 // Ao carregar a página, realiza os seguintes procedimentos automaticamente:
 jQuery(document).ready(function($) {
+    /*
     $('#form-texto-post').submit(function(event) {
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
         var data = {text: text};
         
-        append_hidden_inputs(event.target, data);
+        append_hidden_inputs(event.target, {data: JSON.stringify(data)});
         $(event.target).prop('action', '{% url "post-v2" %}');
     });
-    
-    $('#btn-enviar-texto-ajax').click(function(event) {
+    */
+    //$('#btn-enviar-texto-ajax').click(function(event) {
+    $('#form-texto-post').submit(function(event) {
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
         var data = {text: text};
         
+        event.preventDefault();
         $.ajax({
             type: 'POST',
             url: '{% url "post-v2" %}',

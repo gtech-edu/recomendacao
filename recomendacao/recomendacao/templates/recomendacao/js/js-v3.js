@@ -1,19 +1,24 @@
 // Ao carregar a página, realiza os seguintes procedimentos automaticamente:
 jQuery(document).ready(function($) {
+    /*
     $('#form-texto-post').submit(function(event) {
-        var text = tinyMCE.activeEditor.getContent({format : 'text'});
-        var data = {text: text};
-        
-        append_hidden_inputs(event.target, data);
-        $(event.target).prop('action', '{% url "post-v3" %}');
-    });
-    
-    $('#btn-enviar-texto-ajax').click(function(event) {
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
         var mode = $('#id_mode').val();
         var images = $('#id_images').prop('checked');
         var data = {text: text, mode: mode, images: images};
         
+        append_hidden_inputs(event.target, {data: JSON.stringify(data)});
+        $(event.target).prop('action', '{% url "post-v3" %}');
+    });
+    */
+    //$('#btn-enviar-texto-ajax').click(function(event) {
+    $('#form-texto-post').submit(function(event) {
+        var text = tinyMCE.activeEditor.getContent({format : 'text'});
+        var mode = $('#id_mode').val();
+        var images = $('#id_images').prop('checked');
+        var data = {text: text, mode: mode, images: images};
+        
+        event.preventDefault();
         $.ajax({
             type: 'POST',
             url: '{% url "post-v3" %}',

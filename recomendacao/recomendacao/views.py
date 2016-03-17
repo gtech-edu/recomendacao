@@ -47,6 +47,20 @@ class TemplateViewContext(TemplateView):
         context = super(TemplateViewContext, self).get_context_data(**kwargs)
         context.update(self.extra_context)
         return context
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if request.GET.get('data'):
+            request_data = json.loads(request.GET.get('data'))
+            context.update(request_data)
+        return self.render_to_response(context)
+    
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if request.body:
+            request_data = json.loads(request.body)
+            context.update(request_data)
+        return self.render_to_response(context)
 
 class ViewBusca(View):
     template_name = None
@@ -144,7 +158,7 @@ class EnviaTextoV2(APIView):
             
             
             if request.accepted_renderer.format == 'html':
-                text_hash = hashlib.sha224(text).hexdigest()
+                text_hash = hashlib.sha224(str(response_data)).hexdigest()
                 
                 response_data['text_hash'] = text_hash
                 
@@ -157,7 +171,7 @@ class EnviaTextoV2(APIView):
             
             response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados-v2.html'))
             return response
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, exception=True)
     
     def run_sobek(self, text):
         sobek_path = os.path.join(settings.BASE_DIR, 'misc', 'webServiceSobek_Otavio.jar')
@@ -242,7 +256,7 @@ class EnviaTextoV3(APIView):
             
             
             if request.accepted_renderer.format == 'html':
-                text_hash = hashlib.sha224(text).hexdigest()
+                text_hash = hashlib.sha224(str(response_data)).hexdigest()
                 
                 response_data['text_hash'] = text_hash
                 
