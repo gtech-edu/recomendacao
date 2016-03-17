@@ -25,11 +25,11 @@
     <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
     <script type='text/javascript' src='{% static "recomendacao/js/jquery.serialize-object.compiled.js" %}'></script>
     
-    <script type='text/javascript' src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+    <script type='text/javascript' src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script type='text/javascript'>
         jQuery(document).ready(function($) {
             tinymce.init({
-                selector:'textarea',
+                selector: 'textarea',
                 language_url: '{% static "recomendacao/tinymce/langs/pt_BR.js" %}'
             });
         });

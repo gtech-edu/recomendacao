@@ -2,7 +2,7 @@
 jQuery(document).ready(function($) {
     $('#form-texto-post').submit(function(event) {
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
-        var data = {text:text};
+        var data = {text: text};
         
         append_hidden_inputs(event.target, data);
         $(event.target).prop('action', '{% url "post-v3" %}');
@@ -12,11 +12,12 @@ jQuery(document).ready(function($) {
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
         var mode = $('#id_mode').val();
         var images = $('#id_images').prop('checked');
+        var data = {text: text, mode: mode, images: images};
         
         $.ajax({
             type: 'POST',
             url: '{% url "post-v3" %}',
-            data: JSON.stringify({text: text, mode: mode, images: images}),
+            data: JSON.stringify(data),
             contentType: 'application/json',
             dataType: 'html',
             success: function(response) {
