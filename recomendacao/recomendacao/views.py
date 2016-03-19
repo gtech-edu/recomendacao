@@ -54,6 +54,9 @@ class TemplateViewContext(TemplateView):
             request_data = json.loads(request.GET.get('data'))
             context.update(request_data)
         return self.render_to_response(context)
+
+class TemplateViewContextPost(TemplateViewContext):
+    http_method_names = ['post', 'put', 'patch', 'delete', 'head', 'options', 'trace']
     
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -157,16 +160,16 @@ class EnviaTextoV2(APIView):
             response_data['results_list'] = results_list
             
             
-            if request.accepted_renderer.format == 'html':
-                text_hash = hashlib.sha224(str(response_data)).hexdigest()
-                
-                response_data['text_hash'] = text_hash
-                
-                xml_response_data = serialize_render(response_data, XMLRenderer)
-                self.create_response_data_file(xml_response_data, text_hash, XMLRenderer.format)
-                
-                json_response_data = serialize_render(response_data, JSONRenderer)
-                self.create_response_data_file(json_response_data, text_hash, JSONRenderer.format)
+            #if request.accepted_renderer.format == 'html':
+            text_hash = hashlib.sha224(str(response_data)).hexdigest()
+            
+            response_data['text_hash'] = text_hash
+            
+            xml_response_data = serialize_render(response_data, XMLRenderer)
+            self.create_response_data_file(xml_response_data, text_hash, XMLRenderer.format)
+            
+            json_response_data = serialize_render(response_data, JSONRenderer)
+            self.create_response_data_file(json_response_data, text_hash, JSONRenderer.format)
             
             
             response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados-v2.html'))
@@ -255,16 +258,16 @@ class EnviaTextoV3(APIView):
                 response_data['results_list'] = results_list
             
             
-            if request.accepted_renderer.format == 'html':
-                text_hash = hashlib.sha224(str(response_data)).hexdigest()
-                
-                response_data['text_hash'] = text_hash
-                
-                xml_response_data = serialize_render(response_data, XMLRenderer)
-                self.create_response_data_file(xml_response_data, text_hash, XMLRenderer.format)
-                
-                json_response_data = serialize_render(response_data, JSONRenderer)
-                self.create_response_data_file(json_response_data, text_hash, JSONRenderer.format)
+            #if request.accepted_renderer.format == 'html':
+            text_hash = hashlib.sha224(str(response_data)).hexdigest()
+            
+            response_data['text_hash'] = text_hash
+            
+            xml_response_data = serialize_render(response_data, XMLRenderer)
+            self.create_response_data_file(xml_response_data, text_hash, XMLRenderer.format)
+            
+            json_response_data = serialize_render(response_data, JSONRenderer)
+            self.create_response_data_file(json_response_data, text_hash, JSONRenderer.format)
             
             
             response = Response(response_data, status=status.HTTP_200_OK, template_name=os.path.join(APP_NAME, 'resultados-v3.html'))

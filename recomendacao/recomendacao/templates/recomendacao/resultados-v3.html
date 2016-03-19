@@ -1,19 +1,10 @@
-{% extends 'recomendacao/base.html' %}
-
-{% block extra_css %}
-<style type='text/css'>
-    #results-files {
-        text-align: center;
-    }
-</style>
-{% endblock extra_css %}
-
-{% block content %}
 <div id='results'>
+    {% if text_hash  %}
     <div id='results-files'>
         <a href='{{ FILES_URL }}{{ text_hash }}.xml' target='_blank'>XML</a>
         <a href='{{ FILES_URL }}{{ text_hash }}.json' target='_blank'>JSON</a>
     </div>
+    {% endif %}
     
     {% if sobek_output  %}
     <br />
@@ -50,4 +41,3 @@
     </div>
     {% endif %}
 </div>
-{% endblock content %}

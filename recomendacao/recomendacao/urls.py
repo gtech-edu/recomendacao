@@ -28,6 +28,9 @@ urlpatterns = [
     url(r'^v2/$', views.ViewBusca.as_view(template_name=os.path.join(APP_NAME, 'busca-post-v2.html')), name='v2'),
     url(r'^v3/$', views.ViewBusca.as_view(template_name=os.path.join(APP_NAME, 'busca-post-v3.html')), name='v3'),
     
+    url(r'^v2/resultados/$', views.TemplateViewContextPost.as_view(template_name=os.path.join(APP_NAME, 'resultados-v2.html')), name='resultados-v2'),
+    url(r'^v3/resultados/$', views.TemplateViewContextPost.as_view(template_name=os.path.join(APP_NAME, 'resultados-v3.html')), name='resultados-v3'),
+    
     url(r'^envia-texto-sobek/$', views.envia_texto_sobek, name='envia_texto_sobek'),
     
     url(r'^jquery.redirect.csrf.js$', views.TemplateViewContext.as_view(template_name=os.path.join(APP_NAME, 'js', 'jquery.redirect.csrf.js')), name='jquery.redirect.csrf'),
