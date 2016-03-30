@@ -57,6 +57,10 @@
 **/target/
 
 **/db.sqlite3
-**/settings_secret.py
 /recomendacao/files/*
 /recomendacao/static/*
+
+# Sensitive information
+**/settings_secret.py
+**/recomendacao.yml
+**/recomendacao-dev.yml

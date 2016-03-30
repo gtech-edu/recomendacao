@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  recomendacao:
+    image: alissonmuller/recomendacao
+    stdin_open: true
+    #tty: true
+    restart: always
+    command: /docker-entrypoint.sh
+    volumes:
+      - recomendacao-data:/srv/recomendacao/files
+
+volumes:
+  recomendacao-data:
+    driver: local

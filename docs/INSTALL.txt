@@ -1,0 +1,12 @@
+# This software depends on:
+# Docker Engine 1.10.0+
+# Docker Compose 1.7.0+
+
+# Install Docker Engine
+sudo apt-get update
+sudo apt-get install curl
+sudo curl -sSL https://get.docker.com/ | sh
+
+# Install Docker Compose
+sudo sh -c "curl -L https://github.com/docker/compose/releases/download/1.7.0-rc1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
+sudo chmod +x /usr/local/bin/docker-compose

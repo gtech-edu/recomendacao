@@ -1,0 +1,64 @@
+#!/bin/bash
+
+BASE_YML="base.yml"
+SERVICE_NAME="recomendacao"
+
+CONTEXT_DIR="$(pwd -P)"
+while [[ ${CONTEXT_DIR} != "/" ]]; do
+    CONTEXT_DIR+="/"
+    if [[ -f "${CONTEXT_DIR}${BASE_YML}" ]]; then
+        break
+    fi
+    CONTEXT_DIR="$(dirname ${CONTEXT_DIR})"
+done
+
+COMPOSE_FILES=" \
+    --file ${CONTEXT_DIR}${BASE_YML} \
+    --file ${CONTEXT_DIR}base-dev.yml \
+    --file ${CONTEXT_DIR}recomendacao-dev.yml \
+"
+DOCKER_COMPOSE="sudo docker-compose ${COMPOSE_FILES}"
+DOCKER_COMPOSE_BASH="${DOCKER_COMPOSE} --file ${CONTEXT_DIR}bash.yml"
+
+case "$@" in
+    start)
+        COMMAND="${DOCKER_COMPOSE} up -d ${SERVICE_NAME}"
+    ;;
+    foreground | fg)
+        COMMAND="${DOCKER_COMPOSE} up ${SERVICE_NAME}"
+    ;;
+    debug)
+        COMMAND="
+            ${DOCKER_COMPOSE_BASH} up -d ${SERVICE_NAME} &&
+            ${DOCKER_COMPOSE_BASH} exec ${SERVICE_NAME} /docker-entrypoint.sh
+        "
+    ;;
+    shell)
+        COMMAND="
+            ${DOCKER_COMPOSE_BASH} up -d ${SERVICE_NAME} &&
+            ${DOCKER_COMPOSE_BASH} exec ${SERVICE_NAME} bash
+        "
+    ;;
+    stop)
+        COMMAND="${DOCKER_COMPOSE} stop --timeout 0 ${SERVICE_NAME}"
+    ;;
+    restart)
+        COMMAND="${DOCKER_COMPOSE} restart --timeout 0 ${SERVICE_NAME}"
+    ;;
+    build)
+        COMMAND="${DOCKER_COMPOSE} build ${SERVICE_NAME}"
+    ;;
+    pull)
+        COMMAND="${DOCKER_COMPOSE} pull ${SERVICE_NAME}"
+    ;;
+    push)
+        COMMAND="sudo docker push alissonmuller/recomendacao"
+    ;;
+    *)
+        echo "Usage: $0 [COMMAND]"
+        echo "Commands: start fg debug shell stop restart build pull push"
+        exit 64
+    ;;
+esac
+
+exec bash -c "${COMMAND}"

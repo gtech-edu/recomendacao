@@ -1,0 +1,30 @@
+version: '2'
+
+# Fill the settings below with the correct values
+# and save this file as "recomendacao.yml"
+
+services:
+  recomendacao:
+    ports:
+      # Example:
+      # "9000:80" binds port 9000 of the host machine (this port can be changed)
+      # to port 80 of the Docker container (this port must not be changed)
+      - "9000:80"
+    environment:
+      # Examples:
+      # - With DOCKYARD_HOSTNAME=example.com and DOCKYARD_MOUNTPOINT=/path
+      # the site can be accessed at "example.com/path"
+      # - With DOCKYARD_HOSTNAME=example.com and DOCKYARD_MOUNTPOINT=
+      # the site can be accessed at "example.com"
+      - DOCKYARD_HOSTNAME=example.com
+      - DOCKYARD_MOUNTPOINT=/path # Note: This setting is optional
+      
+      # SECURITY WARNING: keep the secret key used in production secret!
+      - SECRET_SECRET_KEY= # This should be set to a unique, unpredictable value
+      
+      # Email settings, for automatic error reporting
+      # https://docs.djangoproject.com/en/1.8/howto/error-reporting/
+      - SECRET_EMAIL_HOST=smtp.example.com
+      - SECRET_EMAIL_PORT=587
+      - SECRET_EMAIL_HOST_USER=user@example.com
+      - SECRET_EMAIL_HOST_PASSWORD=password

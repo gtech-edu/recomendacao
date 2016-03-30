@@ -1,4 +1,5 @@
 #!/bin/bash
+j2 /templates/settings_secret_template.py > ${DOCKYARD_SRVPROJ}/${DOCKYARD_PKG}/settings_secret.py
 j2 /templates/settings_local.py > ${DOCKYARD_SRVPROJ}/${DOCKYARD_PKG}/settings_local.py
 j2 /templates/site.conf > /etc/apache2/sites-available/site.conf
 a2ensite site.conf
