@@ -56,6 +56,11 @@ docs/_build/
 # PyBuilder
 target/
 
+# Eclipse files
+.project
+.pydevproject
+.settings
+
 db.sqlite3
 /recomendacao/files/*
 /recomendacao/static/*
