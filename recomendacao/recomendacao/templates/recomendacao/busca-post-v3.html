@@ -15,15 +15,19 @@
         <div>
             {{ form.text }}
         </div>
-        
+
         <div>
             Modo: {{ form.mode }}
         </div>
-        
+
         <div>
             Imagens: {{ form.images }}
         </div>
-        
+
+        <div>
+            Atualização do cache: {{ form.cache_reload }} segundos
+        </div>
+
         <div>
             <input id='btn-enviar-texto-ajax' type='submit' value='Enviar texto via POST (Ajax)'>
         </div>

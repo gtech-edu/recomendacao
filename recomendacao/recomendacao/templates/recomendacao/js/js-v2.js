@@ -3,8 +3,9 @@ jQuery(document).ready(function($) {
     //$('#btn-enviar-texto-ajax').click(function(event) {
     $('#form-texto-post').submit(function(event) {
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
-        var data = {text: text};
-        
+        var cache_reload = $('#id_cache_reload').val();
+        var data = {text: text, cache_reload: cache_reload};
+
         event.preventDefault();
         $.ajax({
             type: 'POST',
@@ -26,6 +27,9 @@ jQuery(document).ready(function($) {
                         jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
                     }
                 });
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseJSON);
             },
             beforeSend: function(jqXHR, settings) {
                 jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
