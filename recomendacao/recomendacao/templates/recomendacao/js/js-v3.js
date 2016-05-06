@@ -5,9 +5,8 @@ jQuery(document).ready(function($) {
         var text = tinyMCE.activeEditor.getContent({format : 'text'});
         var mode = $('#id_mode').val();
         var images = $('#id_images').prop('checked');
-        var cache_reload = $('#id_cache_reload').val();
-        var data = {text: text, mode: mode, images: images, cache_reload: cache_reload};
-
+        var data = {text: text, mode: mode, images: images};
+        
         event.preventDefault();
         $.ajax({
             type: 'POST',
@@ -29,9 +28,6 @@ jQuery(document).ready(function($) {
                         jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
                     }
                 });
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR.responseJSON);
             },
             beforeSend: function(jqXHR, settings) {
                 jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
