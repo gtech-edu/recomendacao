@@ -4,7 +4,6 @@ j2 /templates/settings_local.py > ${DOCKYARD_SRVPROJ}/${DOCKYARD_PKG}/settings_l
 j2 /templates/site.conf > /etc/apache2/sites-available/site.conf
 a2ensite site.conf
 
-python manage.py createcachetable         # Create database cache table
 python manage.py migrate                  # Apply database migrations
 python manage.py collectstatic --noinput  # Collect static files
 
